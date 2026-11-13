@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gopass — Un seul pass. Tous vos studios.</title>
+<meta name="description" content="Gopass : un seul abonnement pour réserver vos cours de sport et de bien-être dans tous les studios partenaires, partout en Algérie.">
+<meta name="theme-color" content="#12263A">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='8' fill='%23FF6B35'/%3E%3Crect x='11' y='11' width='10' height='10' rx='3' fill='none' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Tajawal:wght@400;500;700;800&display=swap">
+<style>
+/* Idée de mise en page : application de réservation claire et colorée ; chaque discipline a sa teinte et son pictogramme. */
+:root{
+  color-scheme:light;
+  --ground:#FBFAF7; --surface:#FFFFFF; --ink:#12263A; --muted:#4B5B6B; --line:#E4E7EA;
+  --accent:#FF6B35; --accent-soft:#FFE7DC; --teal:#0E8F82; --red:#B42318;
+  --display:'Bricolage Grotesque','Tajawal',system-ui,sans-serif;
+  --body:'DM Sans','Tajawal',system-ui,sans-serif;
+  --shadow:0 1px 2px rgba(18,38,58,.05),0 10px 28px rgba(18,38,58,.08);
+  --r:22px;
+}
+.d-pilates{--tint:#E3F6C4;--deep:#2C5410}.d-yoga{--tint:#FFE3CC;--deep:#7A3E0C}.d-barre{--tint:#FBD9E6;--deep:#7A1F45}.d-boxe{--tint:#FFD8D1;--deep:#8A2414}
+.d-danse{--tint:#E6DEFF;--deep:#3D2A8C}.d-natation{--tint:#D2ECFF;--deep:#0B4A78}.d-cross{--tint:#FFEEB8;--deep:#6B4E00}.d-stretching{--tint:#D4F3EA;--deep:#0F5A47}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--body);color:var(--ink);background:var(--ground);line-height:1.55;-webkit-text-size-adjust:100%}
+h1,h2,h3,.brand,.big{font-family:var(--display);text-wrap:balance}
+h1,h2,h3,p,ul{margin:0}
+ul{padding:0;list-style:none}
+a{color:var(--teal)}
+svg{flex:none}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:6px}
+.dark :focus-visible{outline-color:#fff}
+main:focus{outline:none}
+main>*{animation:rise .35s ease-out}
+@keyframes rise{from{transform:translateY(8px)}to{transform:none}}
+.wrap{max-width:1160px;margin:0 auto;padding-inline:20px}
+header.top{position:sticky;top:0;z-index:10;background:rgba(251,250,247,.88);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+header.top .wrap{padding-block:10px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px}
+.brand{font-weight:800;font-size:26px;letter-spacing:-.02em;text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;gap:8px;min-height:44px}
+.dot{width:26px;height:26px;border-radius:9px;background:var(--accent);box-shadow:inset 0 0 0 6px var(--accent),inset 0 0 0 9px #fff;transform:rotate(-8deg)}
+nav.main{display:flex;flex-wrap:wrap;align-items:center;gap:6px 6px}
+nav.main a.link{text-decoration:none;font-weight:600;color:var(--muted);padding:10px 14px;border-radius:999px}
+nav.main a.link:hover{background:#fff;color:var(--ink)}
+nav.main a.link[aria-current="page"]{background:var(--ink);color:#fff}
+.langs{display:flex;gap:2px;padding:3px;border-radius:999px;background:#fff;border:1px solid var(--line)}
+.langs button{min-width:44px;height:38px;padding:0 10px;border-radius:999px;border:0;font:inherit;font-size:14px;font-weight:700;cursor:pointer;background:transparent;color:var(--muted)}
+.langs button[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-align:center;text-decoration:none;font-weight:700;font-size:16px;min-height:48px;padding:10px 22px;border-radius:999px;border:1px solid var(--line);cursor:pointer;font-family:inherit;background:#fff;color:var(--ink);transition:transform .15s ease,box-shadow .15s ease}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.accent{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+.btn.small{min-height:44px;font-size:15px;padding:8px 16px}
+.btn.danger{color:var(--red);border-color:#F3C9C4;background:#fff}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.page{padding-block:36px 72px;display:flex;flex-direction:column;gap:28px}
+.eyebrow{display:inline-flex;align-self:flex-start;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--ink);background:var(--accent-soft);padding:6px 14px;border-radius:999px}
+h1{font-weight:800;font-size:clamp(34px,5.4vw,64px);line-height:1.05;letter-spacing:-.02em}
+h2{font-weight:700;font-size:clamp(24px,3.2vw,36px);line-height:1.15;letter-spacing:-.01em}
+h3{font-weight:700;font-size:20px;line-height:1.25}
+html[lang="ar"] h1,html[lang="ar"] h2,html[lang="ar"] .brand{letter-spacing:0}
+html[lang="ar"] h1{line-height:1.25}
+.lead{font-size:19px;color:var(--muted);max-width:60ch}
+.muted{color:var(--muted)}
+.small{font-size:14px;color:var(--muted)}
+.hero{display:flex;flex-wrap:wrap;gap:36px;align-items:center}
+.hero>div{flex:1 1 380px;min-width:0}
+.hero-copy{display:flex;flex-direction:column;gap:20px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.art{position:relative;height:420px;max-width:520px;margin-inline:auto;width:100%}
+.art .blob{position:absolute;border-radius:50%}
+.art .b1{width:300px;height:300px;background:var(--accent-soft);top:30px;inset-inline-start:8%}
+.art .b2{width:150px;height:150px;background:#D2ECFF;bottom:0;inset-inline-end:4%}
+.art .b3{width:70px;height:70px;background:#E3F6C4;top:6px;inset-inline-end:22%}
+.art .tile{position:absolute;width:112px;height:112px;border-radius:28px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.art .t1{top:18px;inset-inline-start:0;transform:rotate(-9deg)}
+.art .t2{top:150px;inset-inline-end:0;transform:rotate(8deg)}
+.art .t3{bottom:10px;inset-inline-start:6%;transform:rotate(6deg)}
+.art .t4{bottom:36px;inset-inline-end:14%;transform:rotate(-7deg);width:92px;height:92px;border-radius:24px}
+.phone{position:absolute;top:24px;left:50%;transform:translateX(-50%) rotate(-3deg);width:214px;background:var(--ink);border-radius:34px;padding:10px;box-shadow:0 24px 50px rgba(18,38,58,.28)}
+.phone-in{background:#fff;border-radius:26px;padding:16px 14px;display:flex;flex-direction:column;gap:10px;align-items:center;color:var(--ink)}
+.phone-in b{font-family:var(--display);font-size:17px}
+.phone-in .pq{width:132px;height:132px}
+.phone-in .pq svg{width:100%;height:100%;display:block}
+.phone-in .pc{font-weight:800;letter-spacing:.08em;font-size:16px;direction:ltr}
+.phone-in .pl{height:10px;border-radius:5px;background:var(--line);width:100%}
+.phone-in .pl.s{width:62%}
+.phone-in .pb{width:100%;height:36px;border-radius:999px;background:var(--accent)}
+.tile{background:var(--tint);color:var(--deep)}
+.badge{display:inline-block;font-size:13px;font-weight:700;padding:4px 12px;border-radius:999px;background:var(--accent-soft);color:var(--ink);white-space:nowrap}
+.badge.ink{background:var(--ink);color:#fff}
+.badge.line{background:#fff;border:1px solid var(--line)}
+.badge.on{background:#fff;color:var(--deep)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:12px;min-width:0;box-shadow:var(--shadow)}
+.card.lift{transition:transform .18s ease,box-shadow .18s ease}
+.card.lift:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(18,38,58,.06),0 18px 40px rgba(18,38,58,.13)}
+.card.pic{padding:0;overflow:hidden}
+.cover{height:118px;padding:14px 16px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.cover .pictos{display:flex;gap:6px;align-self:flex-end;margin-inline-start:auto}
+.card .body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card.soft{background:var(--surface)}
+.card.rec{border:2px solid var(--accent);background:linear-gradient(#fff,#fff) padding-box}
+.card .foot{margin-top:auto;padding-top:6px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.price{font-family:var(--display);font-weight:800;font-size:18px;white-space:nowrap}
+.big{font-weight:800;font-size:40px;line-height:1.05}
+.ico{width:56px;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center;background:var(--accent-soft);color:var(--ink)}
+.step-n{font-family:var(--display);font-weight:800;font-size:15px;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.tiles button{border:0;border-radius:var(--r);padding:18px 16px;min-height:132px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;gap:10px;font:inherit;font-weight:700;font-size:17px;cursor:pointer;text-align:start;transition:transform .18s ease,box-shadow .18s ease}
+.tiles button:hover{transform:translateY(-3px) rotate(-1deg);box-shadow:var(--shadow)}
+.filters{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+.field{display:flex;flex-direction:column;gap:6px;flex:1 1 180px;min-width:0}
+.field label{font-size:14px;font-weight:700}
+.field input,.field select,.field textarea{min-height:48px;padding:10px 14px;border-radius:14px;border:1px solid #C9D0D6;background:#fff;font:inherit;font-size:16px;color:var(--ink);width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{outline:3px solid var(--accent-soft);border-color:var(--accent)}
+.field textarea{min-height:120px;resize:vertical}
+form.stack{display:flex;flex-direction:column;gap:14px;max-width:560px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+form.cols{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+.meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:15px;color:var(--muted)}
+.band{background:#fff;border-block:1px solid var(--line)}
+.band.green{background:var(--ink);color:#fff;border:0}
+.band.green .muted{color:#C6D0DA}
+.band.green .tile{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center}
+.sec{padding-block:56px;display:flex;flex-direction:column;gap:26px}
+.notice{padding:14px 16px;border-radius:16px;background:var(--accent-soft);font-size:15px}
+.empty{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:36px 20px;background:#fff;border:1px dashed #C9D0D6;border-radius:var(--r);color:var(--muted)}
+.empty .tile{width:84px;height:84px;border-radius:24px;display:flex;align-items:center;justify-content:center}
+.ok{color:var(--teal);font-weight:700}
+.err{color:var(--red);font-weight:700}
+.stat{display:flex;flex-wrap:wrap;gap:16px}
+.stat>div{flex:1 1 150px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+.stat b{display:block;font-family:var(--display);font-weight:800;font-size:32px;line-height:1.15;font-variant-numeric:tabular-nums}
+.list{display:flex;flex-direction:column;gap:12px}
+.item{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
+.item>.tile{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center}
+.item>.grow{flex:1 1 220px;min-width:0}
+details{background:#fff;border:1px solid var(--line);border-radius:18px;padding:6px 18px;margin-bottom:10px}
+summary{font-family:var(--display);font-weight:700;font-size:18px;min-height:48px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:24px;font-weight:500;color:var(--accent)}
+details[open] summary::after{content:"–"}
+details p{padding-bottom:14px;color:var(--muted)}
+footer{background:var(--ink);color:#fff}
+footer .wrap{padding-block:36px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px}
+footer nav{display:flex;flex-wrap:wrap;gap:4px 22px}
+footer a{color:#fff;padding:10px 0;display:inline-block}
+footer p{font-size:14px;color:#C6D0DA;flex:1 1 100%}
+dialog{border:0;border-radius:28px;padding:24px;max-width:min(440px,calc(100vw - 32px));width:100%;color:var(--ink);background:#fff;box-shadow:0 30px 80px rgba(18,38,58,.35)}
+dialog::backdrop{background:rgba(18,38,58,.55)}
+dialog .body{display:flex;flex-direction:column;gap:14px}
+.qr{align-self:center;width:220px;height:220px;background:#fff;border-radius:18px;border:1px solid var(--line);padding:6px;display:flex;align-items:center;justify-content:center}
+.qr svg{width:100%;height:100%}
+.code{font-family:var(--display);font-size:28px;font-weight:800;letter-spacing:.08em;text-align:center;direction:ltr}
+#toast{position:fixed;inset-inline:16px;bottom:16px;display:flex;justify-content:center;pointer-events:none;z-index:30}
+#toast div{background:var(--ink);color:#fff;padding:12px 18px;border-radius:16px;font-weight:600;max-width:520px;box-shadow:var(--shadow)}
+#toast div:empty{display:none}
+.field.wide{flex:1 1 100%}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+legend{font-size:14px;font-weight:700;padding:0;margin-bottom:6px}
+.checks{display:flex;flex-wrap:wrap;gap:8px}
+.checks label{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:6px 14px;border:1px solid #C9D0D6;border-radius:999px;font-weight:600;font-size:15px;background:#fff;cursor:pointer}
+.checks input{width:18px;height:18px;min-height:0;padding:0;accent-color:var(--accent)}
+.dform{display:flex;flex-direction:column;gap:12px}
+[hidden]{display:none !important}
+.planner{overflow-x:auto;padding-bottom:6px}
+.week{display:grid;grid-template-columns:repeat(7,minmax(148px,1fr));gap:10px}
+.day{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.day h3{font-size:15px;text-transform:capitalize}
+.slot{border:0;border-radius:14px;padding:10px 12px;text-align:start;font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:2px;background:var(--tint);color:var(--deep);min-height:44px;transition:transform .15s ease}
+.slot:hover{transform:translateY(-2px)}
+.slot .small{color:inherit;font-size:13px}
+.slot .tm{font-weight:800}
+.slot.off{background:#EEF0F2;color:var(--muted)}
+.slot.off b{text-decoration:line-through}
+.tablebox{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:start;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:13px;color:var(--muted)}
+td.num{text-align:end;font-variant-numeric:tabular-nums;white-space:nowrap}
+tfoot td{font-weight:700;border-bottom:0}
+form.inline{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+form.inline input{min-height:44px;padding:6px 10px;border-radius:12px;border:1px solid #C9D0D6;font:inherit;font-size:15px;width:140px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.tabbar{display:none}
+@media (max-width:760px){
+  nav.main a.link{display:none}
+  .week{grid-template-columns:1fr}
+  .page{padding-block:24px 48px}.sec{padding-block:40px}
+  .art{height:360px;transform:scale(.9);transform-origin:top center;margin-bottom:-30px}
+  body{padding-bottom:70px}
+  #toast{bottom:84px}
+  .tabbar{display:flex;position:fixed;inset-inline:0;bottom:0;z-index:20;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+  .tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:52px;justify-content:center;text-decoration:none;font-size:12px;font-weight:700;color:var(--muted);border-radius:14px}
+  .tabbar a[aria-current="page"]{color:var(--ink);background:var(--accent-soft)}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}main>*{animation:none}.btn,.card.lift,.tiles button{transition:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<a class="brand" href="#accueil" dir="ltr"><span class="dot" aria-hidden="true"></span>gopass</a>
+<nav class="main" id="nav"></nav>
+</div></header>
+<main id="app" tabindex="-1"></main>
+<footer class="dark"><div class="wrap" id="foot"></div></footer>
+<nav class="tabbar" id="tabbar"></nav>
+<dialog id="dlg"><div class="body" id="dlgBody"></div></dialog>
+<div id="toast"><div role="status" aria-live="polite" id="toastMsg"></div></div>
+<noscript><p style="padding:24px">Gopass a besoin de JavaScript pour fonctionner.</p></noscript>
+
+<script src="/vendor/qrcode.js"></script>
+<script>
+(function () {
+"use strict";
+
+/* ================= Textes : [français, anglais, arabe] ================= */
+var K = {
+demoBar: ["Version de démonstration : studios et cours fictifs, rien n'est envoyé en ligne.", "Demo version: fictional studios and classes, nothing is sent online.", "نسخة تجريبية: الاستوديوهات والحصص وهمية ولا يُرسل أي شيء عبر الإنترنت."],
+more: ["En savoir plus", "Learn more", "اعرف المزيد"],
+nHome: ["Accueil", "Home", "الرئيسية"], nClasses: ["Cours", "Classes", "الحصص"], nStudios: ["Studios", "Studios", "الاستوديوهات"],
+nPlans: ["Formules", "Plans", "الاشتراكات"], nAccount: ["Mon compte", "My account", "حسابي"], nLogin: ["Créer un compte", "Sign up", "إنشاء حساب"],
+nStudioSpace: ["Espace studio", "Studio dashboard", "فضاء الاستوديو"], nFaq: ["Questions", "FAQ", "الأسئلة"], nContact: ["Contact", "Contact", "اتصل بنا"], nDemo: ["À propos de la démo", "About this demo", "حول النسخة التجريبية"],
+navLabel: ["Navigation principale", "Main navigation", "التنقل الرئيسي"], footLabel: ["Liens de pied de page", "Footer links", "روابط أسفل الصفحة"], langLabel: ["Langue", "Language", "اللغة"],
+rights: ["© 2026 Gopass. Version de démonstration.", "© 2026 Gopass. Demo version.", "© 2026 Gopass. نسخة تجريبية."],
+tagline: ["Un seul pass. Tous vos studios.", "One pass. All your studios.", "اشتراك واحد. كل الاستوديوهات."],
+eyebrow: ["Un pass utilisable partout en Algérie", "One pass, valid all across Algeria", "اشتراك صالح في كل أنحاء الجزائر"],
+heroSub: ["Pilates, yoga, boxe, danse, natation : réservez vos séances dans les meilleurs studios avec un abonnement unique, utilisable partout en Algérie.", "Pilates, yoga, boxing, dance, swimming: book classes at the best studios with a single membership, valid all across Algeria.", "بيلاتس، يوغا، ملاكمة، رقص، سباحة: احجز حصصك في أفضل الاستوديوهات باشتراك واحد صالح في كل أنحاء الجزائر."],
+ctaClasses: ["Voir les cours", "Browse classes", "تصفّح الحصص"], ctaPlans: ["Choisir une formule", "Choose a plan", "اختر اشتراكًا"],
+nextClasses: ["Prochains cours", "Upcoming classes", "الحصص القادمة"],
+howTitle: ["Trois étapes, et vous êtes en séance.", "Three steps and you're in class.", "ثلاث خطوات وتبدأ حصتك."],
+st1t: ["Choisissez votre formule", "Pick your plan", "اختر اشتراكك"], st1p: ["Chaque mois, vous recevez des crédits selon la formule choisie.", "Each month you receive credits based on your plan.", "تحصل كل شهر على أرصدة حسب اشتراكك."],
+st2t: ["Réservez où vous voulez", "Book anywhere", "احجز أينما تريد"], st2p: ["Parcourez les cours par ville, discipline ou jour, et réservez en quelques secondes.", "Browse classes by city, activity or day, and book in seconds.", "تصفّح الحصص حسب المدينة أو النشاط أو اليوم، واحجز في ثوانٍ."],
+st3t: ["Présentez votre QR code", "Show your QR code", "أظهر رمز QR"], st3p: ["À l'accueil du studio, montrez le QR code de votre réservation. Rien à payer sur place.", "At the front desk, show the QR code for your booking. Nothing to pay on site.", "عند الاستقبال، أظهر رمز QR الخاص بحجزك. لا شيء تدفعه في المكان."],
+discTitle: ["Variez les disciplines, gardez le même abonnement.", "Mix your activities, keep the same membership.", "نوّع نشاطاتك واحتفظ بالاشتراك نفسه."],
+forStudios: ["Vous gérez un studio ?", "Run a studio?", "تدير استوديو؟"],
+forStudiosP: ["Remplissez vos créneaux libres sans toucher à vos abonnés ni à vos tarifs.", "Fill your empty spots without touching your members or your prices.", "املأ أماكنك الشاغرة دون المساس بمشتركيك أو بأسعارك."],
+becomePartner: ["Devenir studio partenaire", "Become a partner studio", "كن استوديو شريكًا"],
+classesTitle: ["Les cours des 7 prochains jours", "Classes over the next 7 days", "حصص الأيام السبعة القادمة"],
+fCity: ["Ville", "City", "المدينة"], fDisc: ["Discipline", "Activity", "النشاط"], fDay: ["Jour", "Day", "اليوم"], fAll: ["Toutes", "All", "الكل"], fAllDays: ["Tous les jours", "Every day", "كل الأيام"],
+studioFilter: ["Studio :", "Studio:", "الاستوديو:"], clear: ["Retirer le filtre", "Clear filter", "إزالة التصفية"],
+noClass: ["Aucun cours ne correspond à ces filtres.", "No class matches these filters.", "لا توجد حصص مطابقة لهذه التصفية."],
+spots: ["Places restantes :", "Spots left:", "الأماكن المتبقية:"], min: ["min", "min", "د"],
+book: ["Réserver", "Book", "احجز"], full: ["Complet", "Full", "مكتمل"], booked: ["Déjà réservé", "Already booked", "محجوز مسبقًا"],
+needAccount: ["Créez votre compte pour réserver.", "Create your account to book.", "أنشئ حسابك لتتمكن من الحجز."],
+needCredits: ["Crédits insuffisants. Choisissez ou renouvelez une formule.", "Not enough credits. Choose or renew a plan.", "الأرصدة غير كافية. اختر اشتراكًا أو جدّده."],
+confirmBook: ["Confirmer la réservation", "Confirm booking", "تأكيد الحجز"],
+cost: ["Coût :", "Cost:", "التكلفة:"], after: ["Solde après réservation :", "Balance after booking:", "الرصيد بعد الحجز:"],
+cancelRule: ["Annulation gratuite jusqu'à 12 h avant le cours.", "Free cancellation up to 12 hours before class.", "إلغاء مجاني حتى 12 ساعة قبل الحصة."],
+confirm: ["Confirmer", "Confirm", "تأكيد"], back: ["Retour", "Back", "رجوع"], close: ["Fermer", "Close", "إغلاق"],
+bookedOk: ["Réservation confirmée. Votre QR code est dans Mon compte.", "Booking confirmed. Your QR code is in My account.", "تم تأكيد الحجز. رمز QR موجود في حسابي."],
+studiosTitle: ["Les studios partenaires", "Partner studios", "الاستوديوهات الشريكة"],
+studiosNote: ["Studios fictifs, pour illustrer le fonctionnement.", "Fictional studios, to show how it works.", "استوديوهات وهمية لتوضيح طريقة العمل."],
+seeClasses: ["Voir les cours", "See classes", "عرض الحصص"],
+partnerTitle: ["Devenir studio partenaire", "Become a partner studio", "كن استوديو شريكًا"],
+partnerP: ["Laissez vos coordonnées, nous vous recontactons avant le lancement.", "Leave your details and we'll get back to you before launch.", "اترك بياناتك وسنتواصل معك قبل الانطلاق."],
+pName: ["Nom du studio", "Studio name", "اسم الاستوديو"], pCity: ["Ville", "City", "المدينة"], pEmail: ["E-mail de contact", "Contact email", "البريد الإلكتروني"], pDisc: ["Disciplines proposées", "Activities offered", "النشاطات المقترحة"],
+send: ["Envoyer", "Send", "إرسال"],
+savedLocal: ["Enregistré dans ce navigateur uniquement (démo) : rien n'a été envoyé.", "Saved in this browser only (demo): nothing was sent.", "حُفظ في هذا المتصفح فقط (نسخة تجريبية): لم يُرسل أي شيء."],
+plansTitle: ["Des crédits chaque mois, à dépenser comme vous voulez.", "Credits every month, to spend however you like.", "أرصدة كل شهر، تصرفها كما تشاء."],
+plansSub: ["Chaque cours vaut un certain nombre de crédits selon le studio et l'horaire. Sans engagement.", "Each class costs a number of credits depending on the studio and the time. No commitment.", "لكل حصة عدد من الأرصدة حسب الاستوديو والتوقيت. دون التزام."],
+plansDemo: ["Démo : aucun paiement n'est demandé. Les tarifs seront annoncés au lancement.", "Demo: no payment is taken. Prices will be announced at launch.", "نسخة تجريبية: لا يُطلب أي دفع. الأسعار تُعلن عند الانطلاق."],
+p1: ["Découverte", "Starter", "اكتشاف"], p2: ["Régulier", "Regular", "منتظم"], p3: ["Intensif", "Intensive", "مكثّف"],
+p1w: ["Pour bouger de temps en temps.", "For moving every now and then.", "لمن يتحرّك من حين لآخر."], p2w: ["Pour une à deux séances par semaine.", "For one or two classes a week.", "لحصة أو حصتين في الأسبوع."], p3w: ["Pour s'entraîner presque tous les jours.", "For training almost every day.", "لمن يتمرّن تقريبًا كل يوم."],
+perMonth: ["par mois", "per month", "في الشهر"], rec: ["Recommandé", "Recommended", "موصى به"],
+activate: ["Activer cette formule", "Activate this plan", "تفعيل هذا الاشتراك"], current: ["Formule actuelle", "Current plan", "الاشتراك الحالي"], renew: ["Renouveler les crédits", "Renew credits", "تجديد الأرصدة"],
+confirmPlan: ["Activer la formule", "Activate plan", "تفعيل الاشتراك"], planSets: ["Votre solde passera à", "Your balance will be set to", "سيصبح رصيدك"],
+planOk: ["Formule activée.", "Plan activated.", "تم تفعيل الاشتراك."],
+accTitle: ["Mon compte", "My account", "حسابي"],
+signupTitle: ["Créez votre compte", "Create your account", "أنشئ حسابك"],
+signupP: ["Démo : pas de mot de passe, le compte reste dans ce navigateur.", "Demo: no password, the account stays in this browser.", "نسخة تجريبية: دون كلمة مرور، والحساب يبقى في هذا المتصفح."],
+name: ["Prénom", "First name", "الاسم"], email: ["E-mail", "Email", "البريد الإلكتروني"], create: ["Créer mon compte", "Create my account", "إنشاء حسابي"],
+badEmail: ["Merci de saisir une adresse e-mail valide.", "Please enter a valid email address.", "يرجى إدخال بريد إلكتروني صحيح."], required: ["Merci de remplir tous les champs.", "Please fill in every field.", "يرجى ملء كل الحقول."],
+hello: ["Bonjour", "Hello", "مرحبًا"], balance: ["Solde", "Balance", "الرصيد"], plan: ["Formule", "Plan", "الاشتراك"], noPlan: ["Aucune formule", "No plan", "لا يوجد اشتراك"],
+upcoming: ["Réservations à venir", "Upcoming bookings", "الحجوزات القادمة"], noUpcoming: ["Aucune réservation à venir.", "No upcoming booking.", "لا توجد حجوزات قادمة."],
+history: ["Historique", "History", "السجل"],
+showQr: ["Afficher le QR code", "Show QR code", "عرض رمز QR"], cancel: ["Annuler", "Cancel", "إلغاء"],
+ticketTitle: ["Votre réservation", "Your booking", "حجزك"], ticketP: ["Présentez ce code à l'accueil du studio.", "Show this code at the studio's front desk.", "أظهر هذا الرمز عند استقبال الاستوديو."],
+qrMissing: ["QR code indisponible hors connexion : le code ci-dessous suffit.", "QR code unavailable offline: the code below is enough.", "رمز QR غير متاح دون اتصال: الرمز أدناه كافٍ."],
+cancelTitle: ["Annuler la réservation ?", "Cancel this booking?", "إلغاء الحجز؟"],
+refundYes: ["Vos crédits seront rendus :", "Your credits will be refunded:", "ستُعاد أرصدتك:"], refundNo: ["Moins de 12 h avant le cours : les crédits ne sont pas rendus.", "Less than 12 hours before class: credits are not refunded.", "أقل من 12 ساعة قبل الحصة: لا تُعاد الأرصدة."],
+cancelOk: ["Réservation annulée.", "Booking cancelled.", "تم إلغاء الحجز."],
+sBooked: ["Réservé", "Booked", "محجوز"], sCancelled: ["Annulé", "Cancelled", "ملغى"], sAttended: ["Présence validée", "Checked in", "تم تسجيل الحضور"], sPast: ["Passé", "Past", "منتهٍ"], sStudioCancel: ["Annulé par le studio", "Cancelled by studio", "ألغاه الاستوديو"],
+reset: ["Réinitialiser la démo", "Reset the demo", "إعادة ضبط النسخة التجريبية"], resetQ: ["Effacer le compte, les réservations et tout ce qui a été saisi dans ce navigateur ?", "Erase the account, bookings and everything entered in this browser?", "هل تريد حذف الحساب والحجوزات وكل ما أُدخل في هذا المتصفح؟"], resetOk: ["Démo réinitialisée.", "Demo reset.", "تمت إعادة الضبط."],
+esTitle: ["Espace studio", "Studio dashboard", "فضاء الاستوديو"], esP: ["Démo : choisissez un studio pour voir ce que voit son gérant.", "Demo: pick a studio to see what its manager sees.", "نسخة تجريبية: اختر استوديو لترى ما يراه مسيّره."],
+esStudio: ["Studio", "Studio", "الاستوديو"], esClasses: ["Cours à venir", "Upcoming classes", "الحصص القادمة"], esBookings: ["Réservations Gopass", "Gopass bookings", "حجوزات Gopass"], esChecked: ["Présences validées", "Check-ins", "الحضور المسجّل"],
+checkTitle: ["Valider une arrivée", "Check in a member", "تسجيل حضور"], checkLabel: ["Code de réservation", "Booking code", "رمز الحجز"], check: ["Valider", "Check in", "تسجيل"],
+checkOk: ["Présence validée pour", "Checked in:", "تم تسجيل حضور"], checkNo: ["Code inconnu pour ce studio.", "Unknown code for this studio.", "رمز غير معروف لهذا الاستوديو."], checkDone: ["Ce code a déjà été validé ou annulé.", "This code was already used or cancelled.", "هذا الرمز استُعمل أو أُلغي من قبل."],
+checkHint: ["Réservez un cours de ce studio depuis Cours, puis saisissez ici le code affiché dans Mon compte.", "Book one of this studio's classes from Classes, then enter the code shown in My account.", "احجز حصة لهذا الاستوديو من صفحة الحصص، ثم أدخل هنا الرمز الظاهر في حسابي."],
+esList: ["Planning ouvert sur Gopass", "Schedule open on Gopass", "البرنامج المفتوح على Gopass"], bookedCount: ["Réservées :", "Booked:", "المحجوزة:"],
+remove: ["Retirer", "Remove", "حذف"], removeQ: ["Annuler cette séance pour cette date uniquement ? Les réservations faites dans cette démo seront annulées et remboursées.", "Cancel this session for this date only? Bookings made in this demo will be cancelled and refunded.", "إلغاء هذه الحصة لهذا التاريخ فقط؟ ستُلغى الحجوزات التي تمت في هذه النسخة وتُعاد أرصدتها."], removed: ["Séance annulée.", "Session cancelled.", "تم إلغاء الحصة."],
+addTitle: ["Créer un cours", "Create a class", "إنشاء حصة"], cTitle: ["Nom du cours", "Class name", "اسم الحصة"], cDate: ["Date", "Date", "التاريخ"], cTime: ["Heure", "Time", "الساعة"], cDur: ["Durée (min)", "Length (min)", "المدة (د)"], cCredits: ["Crédits", "Credits", "الأرصدة"], cSpots: ["Places ouvertes à Gopass", "Spots open to Gopass", "الأماكن المفتوحة لـ Gopass"],
+add: ["Ajouter le cours", "Add class", "إضافة الحصة"], added: ["Cours ajouté. Il apparaît dans Cours.", "Class added. It now shows under Classes.", "تمت إضافة الحصة. تظهر الآن في صفحة الحصص."], badClass: ["Vérifiez les champs : l'heure doit être dans le futur.", "Check the fields: the time must be in the future.", "تحقق من الحقول: يجب أن يكون التوقيت في المستقبل."],
+faqTitle: ["Questions fréquentes", "Frequently asked questions", "الأسئلة الشائعة"],
+q1: ["Comment fonctionnent les crédits ?", "How do credits work?", "كيف تعمل الأرصدة؟"], a1: ["Votre formule vous donne des crédits chaque mois. Chaque cours affiche son prix en crédits avant la réservation.", "Your plan gives you credits every month. Each class shows its price in credits before you book.", "اشتراكك يمنحك أرصدة كل شهر. كل حصة تعرض سعرها بالأرصدة قبل الحجز."],
+q2: ["Puis-je annuler une réservation ?", "Can I cancel a booking?", "هل يمكنني إلغاء حجز؟"], a2: ["Oui, depuis Mon compte. Jusqu'à 12 h avant le cours, vos crédits sont rendus.", "Yes, from My account. Up to 12 hours before class, your credits are refunded.", "نعم، من حسابي. حتى 12 ساعة قبل الحصة تُعاد أرصدتك."],
+q3: ["Y a-t-il un engagement ?", "Is there a commitment?", "هل هناك التزام؟"], a3: ["Non. L'abonnement est mensuel et vous pouvez changer de formule à tout moment.", "No. The membership is monthly and you can change plans at any time.", "لا. الاشتراك شهري ويمكنك تغييره في أي وقت."],
+q4: ["Comment se passe l'arrivée au studio ?", "What happens when I arrive at the studio?", "كيف يتم الدخول إلى الاستوديو؟"], a4: ["Vous montrez le QR code ou le code de votre réservation. Le studio le valide et vous entrez.", "You show your booking's QR code or code. The studio checks it and you go in.", "تُظهر رمز QR أو رمز حجزك، فيتحقق منه الاستوديو وتدخل."],
+q5: ["Dans quelles villes Gopass sera-t-il disponible ?", "Which cities will Gopass be available in?", "في أي مدن سيتوفر Gopass؟"], a5: ["Vos crédits sont valables dans tous les studios partenaires, partout en Algérie. Les villes de lancement seront annoncées prochainement ; celles de cette démo sont des exemples.", "Your credits are valid at every partner studio, all across Algeria. Launch cities will be announced soon; the ones in this demo are examples.", "أرصدتك صالحة في كل الاستوديوهات الشريكة، في كل أنحاء الجزائر. سنعلن عن مدن الانطلاق قريبًا، والمدن في هذه النسخة أمثلة فقط."],
+q6: ["Comment payer mon abonnement ?", "How do I pay for my membership?", "كيف أدفع اشتراكي؟"], a6: ["Les moyens de paiement seront précisés au lancement. Cette démo ne demande aucun paiement.", "Payment methods will be confirmed at launch. This demo takes no payment.", "ستُحدَّد وسائل الدفع عند الانطلاق. هذه النسخة لا تطلب أي دفع."],
+contactTitle: ["Nous écrire", "Write to us", "راسلنا"], msg: ["Votre message", "Your message", "رسالتك"],
+demoTitle: ["À propos de cette démo", "About this demo", "حول هذه النسخة التجريبية"],
+demo1: ["Tout fonctionne dans votre navigateur : compte, crédits, réservations, QR codes et espace studio.", "Everything runs in your browser: account, credits, bookings, QR codes and the studio dashboard.", "كل شيء يعمل داخل متصفحك: الحساب، الأرصدة، الحجوزات، رموز QR وفضاء الاستوديو."],
+demo2: ["Rien n'est envoyé à un serveur. Vos saisies restent sur cet appareil et peuvent disparaître si vous videz le navigateur.", "Nothing is sent to a server. What you enter stays on this device and may disappear if you clear the browser.", "لا يُرسل أي شيء إلى خادم. ما تُدخله يبقى على هذا الجهاز وقد يختفي إذا مسحت بيانات المتصفح."],
+demo3: ["Les studios, les cours et les places déjà prises sont fictifs. Le paiement n'existe pas dans cette version.", "Studios, classes and spots already taken are fictional. There is no payment in this version.", "الاستوديوهات والحصص والأماكن المحجوزة وهمية. لا يوجد دفع في هذه النسخة."],
+confirmRemove: ["Annuler la séance", "Cancel session", "إلغاء الحصة"],
+planTitle: ["Planning de la semaine", "This week's schedule", "برنامج الأسبوع"],
+planHint: ["Touchez une séance pour modifier ses places ou l'annuler pour cette date seulement.", "Tap a session to change its spots or cancel it for that date only.", "اضغط على حصة لتعديل أماكنها أو إلغائها لهذا التاريخ فقط."],
+recurring: ["Chaque semaine", "Weekly", "كل أسبوع"], once: ["Ponctuel", "One-off", "مرة واحدة"],
+cancelledTag: ["Annulée", "Cancelled", "ملغاة"], restore: ["Rétablir", "Restore", "استرجاع"], restored: ["Séance rétablie.", "Session restored.", "تم استرجاع الحصة."],
+slotTitle: ["Modifier cette séance", "Edit this session", "تعديل هذه الحصة"],
+gSpots: ["Places ouvertes à Gopass", "Spots open to Gopass", "الأماكن المفتوحة لـ Gopass"],
+cap: ["Capacité totale du cours", "Total class capacity", "الطاقة الكلية للحصة"],
+capIs: ["Capacité totale :", "Total capacity:", "الطاقة الكلية:"],
+save: ["Enregistrer", "Save", "حفظ"], saved: ["Séance mise à jour.", "Session updated.", "تم تحديث الحصة."],
+cancelSlot: ["Annuler cette séance", "Cancel this session", "إلغاء هذه الحصة"],
+badSlot: ["Les places ne peuvent pas descendre sous les réservations déjà prises ni dépasser la capacité.", "Spots cannot go below existing bookings or above capacity.", "لا يمكن أن تقل الأماكن عن الحجوزات الحالية ولا أن تتجاوز الطاقة."],
+seriesTitle: ["Cours récurrents", "Recurring classes", "الحصص المتكررة"],
+seriesDel: ["Supprimer la série", "Delete series", "حذف السلسلة"],
+seriesQ: ["Supprimer ce cours de toutes les semaines à venir ? Les réservations faites dans cette démo seront annulées et remboursées.", "Remove this class from all coming weeks? Bookings made in this demo will be cancelled and refunded.", "حذف هذه الحصة من كل الأسابيع القادمة؟ ستُلغى الحجوزات التي تمت في هذه النسخة وتُعاد أرصدتها."],
+seriesGone: ["Série supprimée.", "Series deleted.", "تم حذف السلسلة."],
+noSeries: ["Aucun cours récurrent pour ce studio.", "No recurring class for this studio.", "لا توجد حصص متكررة لهذا الاستوديو."],
+noSlot: ["Aucune séance", "No session", "لا توجد حصص"],
+cMode: ["Répétition", "Repeat", "التكرار"], cDays: ["Jours de la semaine", "Days of the week", "أيام الأسبوع"],
+badDays: ["Choisissez au moins un jour.", "Pick at least one day.", "اختر يومًا واحدًا على الأقل."],
+badCap: ["Les places Gopass ne peuvent pas dépasser la capacité totale.", "Gopass spots cannot exceed total capacity.", "لا يمكن أن تتجاوز أماكن Gopass الطاقة الكلية."],
+addedRec: ["Cours récurrent créé. Il est publié chaque semaine.", "Recurring class created. It is published every week.", "تم إنشاء الحصة المتكررة. تُنشر كل أسبوع."],
+ofCap: ["sur", "of", "من"]
+};
+
+Object.assign(K, {
+rights: ["© 2026 Gopass. Tous droits réservés.", "© 2026 Gopass. All rights reserved.", "© 2026 Gopass. جميع الحقوق محفوظة."],
+signupP: ["Un compte suffit pour réserver dans tous les studios partenaires.", "One account is all you need to book at every partner studio.", "حساب واحد يكفي للحجز في كل الاستوديوهات الشريكة."],
+loginTitle: ["Connexion", "Log in", "تسجيل الدخول"], password: ["Mot de passe", "Password", "كلمة المرور"],
+pwHint: ["8 caractères minimum.", "At least 8 characters.", "8 أحرف على الأقل."], loginBtn: ["Se connecter", "Log in", "دخول"],
+haveAccount: ["Déjà un compte ?", "Already have an account?", "لديك حساب؟"], noAccount: ["Pas encore de compte ?", "No account yet?", "ليس لديك حساب؟"],
+logout: ["Se déconnecter", "Log out", "تسجيل الخروج"],
+eLogin: ["E-mail ou mot de passe incorrect.", "Wrong email or password.", "البريد الإلكتروني أو كلمة المرور غير صحيحة."],
+eEmailUsed: ["Cette adresse a déjà un compte. Connectez-vous.", "This address already has an account. Please log in.", "هذا العنوان لديه حساب بالفعل. سجّل الدخول."],
+eShortPw: ["Le mot de passe doit faire au moins 8 caractères.", "The password must be at least 8 characters long.", "يجب أن تتكوّن كلمة المرور من 8 أحرف على الأقل."],
+eFull: ["Ce cours est complet.", "This class is full.", "هذه الحصة مكتملة."],
+eAlready: ["Vous avez déjà réservé ce cours.", "You already booked this class.", "لقد حجزت هذه الحصة من قبل."],
+eGone: ["Cet élément n'est plus disponible.", "This item is no longer available.", "هذا العنصر لم يعد متاحًا."],
+eNet: ["Connexion impossible. Vérifiez votre réseau et réessayez.", "Connection failed. Check your network and try again.", "تعذّر الاتصال. تحقق من الشبكة وحاول مجددًا."],
+auth: ["Connectez-vous pour continuer.", "Log in to continue.", "سجّل الدخول للمتابعة."],
+forbidden: ["Cette action est réservée aux membres.", "This action is for members only.", "هذا الإجراء خاص بالأعضاء."],
+ePayOff: ["Le paiement en ligne n'est pas encore ouvert. Vous pouvez payer en espèces chez un studio partenaire : votre formule est alors activée par notre équipe.", "Online payment is not open yet. You can pay in cash at a partner studio: our team then activates your plan.", "الدفع عبر الإنترنت غير متاح بعد. يمكنك الدفع نقدًا لدى استوديو شريك، ثم يفعّل فريقنا اشتراكك."],
+ePayFail: ["Le paiement n'a pas pu démarrer. Réessayez dans un instant.", "Payment could not start. Please try again in a moment.", "تعذّر بدء الدفع. حاول مجددًا بعد قليل."],
+payInfo: ["Paiement sécurisé par carte CIB ou Edahabia. Vous pouvez aussi payer en espèces chez un studio partenaire.", "Secure payment by CIB or Edahabia card. You can also pay in cash at a partner studio.", "دفع آمن ببطاقة CIB أو الذهبية. يمكنك أيضًا الدفع نقدًا لدى استوديو شريك."],
+confirmPay: ["Vous allez être redirigé vers la page de paiement sécurisée.", "You will be redirected to the secure payment page.", "ستُحوَّل إلى صفحة الدفع الآمنة."],
+payOk: ["Paiement reçu. Vos crédits apparaissent dès que la banque confirme, en général en moins d'une minute.", "Payment received. Your credits appear once the bank confirms, usually within a minute.", "تم استلام الدفع. تظهر أرصدتك فور تأكيد البنك، عادةً خلال دقيقة."],
+payKo: ["Le paiement n'a pas abouti. Rien n'a été débité côté Gopass.", "The payment did not go through. Nothing was credited on Gopass.", "لم يكتمل الدفع. لم يُضف أي رصيد على Gopass."],
+da: ["DA", "DZD", "دج"], expires: ["Valable jusqu'au", "Valid until", "صالح حتى"],
+activate: ["Choisir cette formule", "Choose this plan", "اختر هذا الاشتراك"], renew: ["Renouveler", "Renew", "تجديد"],
+delAccount: ["Supprimer mon compte", "Delete my account", "حذف حسابي"],
+delQ: ["Supprimer définitivement votre compte ? Vos réservations à venir seront annulées et vos crédits perdus.", "Delete your account permanently? Your upcoming bookings will be cancelled and your credits lost.", "حذف حسابك نهائيًا؟ ستُلغى حجوزاتك القادمة وتفقد أرصدتك."],
+delOk: ["Compte supprimé.", "Account deleted.", "تم حذف الحساب."],
+noStudios: ["Les premiers studios partenaires arrivent bientôt.", "The first partner studios are coming soon.", "أوائل الاستوديوهات الشريكة قادمة قريبًا."],
+noClass: ["Aucun cours ne correspond pour le moment.", "No class matches right now.", "لا توجد حصص مطابقة حاليًا."],
+sent: ["Message envoyé. Nous vous répondrons rapidement.", "Message sent. We will get back to you soon.", "تم إرسال رسالتك. سنرد عليك قريبًا."],
+sentPartner: ["Demande envoyée. Nous vous recontactons très vite.", "Request sent. We will contact you shortly.", "تم إرسال طلبك. سنتواصل معك قريبًا."],
+loading: ["Chargement…", "Loading…", "جارٍ التحميل…"],
+esP: ["Gérez votre planning et validez les arrivées.", "Manage your schedule and check members in.", "سيّر برنامجك وسجّل الحضور."],
+esOnly: ["Cet espace est réservé aux studios partenaires.", "This area is for partner studios.", "هذا الفضاء خاص بالاستوديوهات الشريكة."],
+esBookings: ["Réservations du mois", "Bookings this month", "حجوزات هذا الشهر"],
+checkHint: ["Saisissez le code présenté par le membre. Il est valable le jour du cours.", "Enter the code shown by the member. It is valid on the day of the class.", "أدخل الرمز الذي يُظهره العضو. الرمز صالح يوم الحصة."],
+checkDay: ["Ce code est valable le jour du cours uniquement.", "This code is only valid on the day of the class.", "هذا الرمز صالح يوم الحصة فقط."],
+planHint: ["Touchez une séance pour modifier ses places ou l'annuler pour cette date seulement.", "Tap a session to change its spots or cancel it for that date only.", "اضغط على حصة لتعديل أماكنها أو إلغائها لهذا التاريخ فقط."],
+removeQ: ["Annuler cette séance pour cette date uniquement ? Les membres inscrits seront remboursés.", "Cancel this session for this date only? Booked members will be refunded.", "إلغاء هذه الحصة لهذا التاريخ فقط؟ ستُعاد أرصدة الأعضاء المسجّلين."],
+seriesQ: ["Supprimer ce cours de toutes les semaines à venir ? Les membres inscrits seront remboursés.", "Remove this class from all coming weeks? Booked members will be refunded.", "حذف هذه الحصة من كل الأسابيع القادمة؟ ستُعاد أرصدة الأعضاء المسجّلين."],
+cRef: ["Tarif habituel de la séance (DA)", "Usual price per class (DZD)", "السعر المعتاد للحصة (دج)"],
+refHint: ["Indiquez votre prix de séance en pack. Gopass en déduit le prix en crédits, sans jamais descendre sous votre tarif.", "Enter your per-class price in a pack. Gopass derives the credit price from it and never goes below your rate.", "أدخل سعر الحصة ضمن الباقة. يحسب Gopass السعر بالأرصدة انطلاقًا منه دون النزول تحت سعرك."],
+badClass: ["Vérifiez les champs : date et heure à venir, durée, places et tarif.", "Check the fields: future date and time, length, spots and price.", "تحقق من الحقول: تاريخ وساعة قادمان، المدة، الأماكن والسعر."],
+statement: ["Relevé du mois", "This month's statement", "كشف هذا الشهر"], stTotal: ["Montant dû", "Amount due", "المبلغ المستحق"],
+kAttended: ["Présence validée", "Checked in", "حضور مسجّل"], kNoShow: ["Absence", "No-show", "غياب"], kLate: ["Annulation tardive", "Late cancellation", "إلغاء متأخر"],
+noLines: ["Aucune réservation due ce mois-ci.", "Nothing due this month.", "لا شيء مستحق هذا الشهر."],
+nPrivacy: ["Confidentialité", "Privacy", "الخصوصية"],
+pv1: ["Nous conservons votre prénom, votre e-mail, votre langue, votre formule, votre solde de crédits et vos réservations.", "We keep your first name, email, language, plan, credit balance and bookings.", "نحتفظ باسمك وبريدك الإلكتروني ولغتك واشتراكك ورصيدك وحجوزاتك."],
+pv2: ["Un studio ne voit que le prénom des membres inscrits à ses propres séances.", "A studio only sees the first name of members booked into its own classes.", "لا يرى الاستوديو سوى أسماء الأعضاء المسجّلين في حصصه."],
+pv3: ["Le paiement en ligne se fait sur la page de notre prestataire de paiement. Gopass ne voit ni ne conserve votre numéro de carte.", "Online payment happens on our payment provider's page. Gopass never sees or stores your card number.", "يتم الدفع عبر الإنترنت على صفحة مزوّد الدفع. لا يرى Gopass رقم بطاقتك ولا يحتفظ به."],
+pv4: ["Vous pouvez supprimer votre compte à tout moment depuis Mon compte. Vos données personnelles sont alors effacées.", "You can delete your account at any time from My account. Your personal data is then erased.", "يمكنك حذف حسابك في أي وقت من حسابي، وعندها تُمسح بياناتك الشخصية."],
+a5: ["Vos crédits sont valables dans tous les studios partenaires, partout en Algérie. De nouvelles villes s'ajoutent au fil des partenariats.", "Your credits are valid at every partner studio, all across Algeria. New cities are added as partnerships grow.", "أرصدتك صالحة في كل الاستوديوهات الشريكة، في كل أنحاء الجزائر. تُضاف مدن جديدة مع توسّع الشراكات."],
+eNoMember: ["Aucun membre avec cette adresse.", "No member with this address.", "لا يوجد عضو بهذا العنوان."],
+badAdjust: ["Ajustement impossible : le solde ne peut pas devenir négatif.", "Adjustment refused: the balance cannot go below zero.", "تعديل مرفوض: لا يمكن أن يصبح الرصيد سالبًا."],
+a6: ["En ligne par carte CIB ou Edahabia, ou en espèces chez un studio partenaire.", "Online by CIB or Edahabia card, or in cash at a partner studio.", "عبر الإنترنت ببطاقة CIB أو الذهبية، أو نقدًا لدى استوديو شريك."]
+});
+
+/* ================= Illustrations ================= */
+var PICTO = {
+yoga: '<circle cx="32" cy="13" r="5"/><path d="M32 20v18M32 25L21 14M32 25l11-11M32 38q-12 1-14 10M32 38q12 1 14 10M12 54h40"/>',
+pilates: '<circle cx="15" cy="29" r="5"/><path d="M21 33h17l12-13M27 33l6-9M6 43h52M56 43V24M44 43v-5"/>',
+barre: '<circle cx="28" cy="12" r="5"/><path d="M6 27h52M28 19v19M28 25l13 2M28 38v17M28 38l19 6"/>',
+boxe: '<path d="M20 34V20a8 8 0 0 1 8-8h10a10 10 0 0 1 10 10v10a8 8 0 0 1-8 8H26a6 6 0 0 1-6-6zM20 25h-3a5 5 0 0 0 0 10h3M24 40v13h18V40M24 46h18"/>',
+danse: '<circle cx="35" cy="11" r="5"/><path d="M35 18l-4 19M34 23L19 15M34 23l14 7M31 37l-9 17M31 37l16 7"/>',
+natation: '<circle cx="20" cy="24" r="5"/><path d="M26 30q10-18 22-4M6 40q6-6 13 0t13 0 13 0 13 0M6 51q6-6 13 0t13 0 13 0 13 0"/>',
+cross: '<circle cx="32" cy="40" r="15"/><path d="M22 29v-9a10 10 0 0 1 20 0v9"/>',
+stretching: '<circle cx="41" cy="25" r="5"/><path d="M20 44q4-12 17-13M37 33l13 9M10 46h44"/>'
+};
+function picto(d, size) { return '<svg viewBox="0 0 64 64" width="' + size + '" height="' + size + '" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">' + (PICTO[d] || "") + "</svg>"; }
+var ICON = {
+home: '<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+cal: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/>',
+pin: '<path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+coin: '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5h4.5a2 2 0 0 1 0 4H9"/>',
+qr: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM21 14v7M14 21h3"/>'
+};
+function ico(name, size) { return '<svg viewBox="0 0 24 24" width="' + (size || 24) + '" height="' + (size || 24) + '" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + ICON[name] + "</svg>"; }
+function qrSvg(text) { try { if (window.qrcode) { var q = window.qrcode(0, "M"); q.addData(text); q.make(); return q.createSvgTag(6, 0); } } catch (e) {} return ""; }
+var DISC = {
+pilates: ["Pilates Reformer", "Reformer Pilates", "بيلاتس ريفورمر"], yoga: ["Yoga", "Yoga", "يوغا"], barre: ["Barre", "Barre", "بار"],
+boxe: ["Boxe", "Boxing", "ملاكمة"], danse: ["Danse", "Dance", "رقص"], natation: ["Natation", "Swimming", "سباحة"],
+cross: ["Cross-training", "Cross-training", "كروس ترينينغ"], stretching: ["Stretching", "Stretching", "تمدّد"]
+};
+var LANGS = ["fr", "en", "ar"], LOCALE = ["fr-FR", "en-GB", "ar-DZ"];
+var ROUTES = ["accueil", "cours", "studios", "formules", "compte", "espace-studio", "admin", "faq", "contact", "confidentialite"];
+
+/* ================= État (chargé depuis le serveur) ================= */
+var D = { me: null, plans: [], studios: [], sessions: [], cfg: {}, dash: null, statement: null, adm: null, members: null, statements: null, ready: false };
+var lang = null;
+try { lang = localStorage.getItem("gopass-lang"); } catch (e) {}
+if (LANGS.indexOf(lang) === -1) { var nl = (navigator.language || "fr").slice(0, 2).toLowerCase(); lang = LANGS.indexOf(nl) !== -1 ? nl : "fr"; }
+var F = { city: "", disc: "", day: "", studio: "" };
+var AUTH = "register";
+var formMsg = {};
+var busy = false;
+
+/* ================= Outils ================= */
+function L() { return LANGS.indexOf(lang); }
+function t(key) { return K[key] ? K[key][L()] : key; }
+function tr(arr) { return arr[L()] || arr[0]; }
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+function pad(n) { return (n < 10 ? "0" : "") + n; }
+function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+function dateOf(iso) { return new Date(iso); }
+function fmtDay(d) { try { return new Intl.DateTimeFormat(LOCALE[L()], { weekday: "long", day: "numeric", month: "long" }).format(d); } catch (e) { return ymd(d); } }
+function fmtShort(d) { try { return new Intl.DateTimeFormat(LOCALE[L()], { weekday: "short", day: "numeric", month: "short" }).format(d); } catch (e) { return ymd(d); } }
+function fmtDate(d) { try { return new Intl.DateTimeFormat(LOCALE[L()], { day: "numeric", month: "long", year: "numeric" }).format(d); } catch (e) { return ymd(d); } }
+function dayName(i) { try { return new Intl.DateTimeFormat(LOCALE[L()], { weekday: "short" }).format(new Date(2026, 10, 1 + i)); } catch (e) { return String(i); } }
+function timeOf(iso) { return iso.slice(11, 16); }
+function money(n) { return new Intl.NumberFormat(LOCALE[L()]).format(n) + " " + t("da"); }
+function credits(n) {
+  if (lang === "fr") { return n + " crédit" + (n > 1 ? "s" : ""); }
+  if (lang === "en") { return n + " credit" + (n === 1 ? "" : "s"); }
+  if (n === 1) { return "رصيد واحد"; } if (n === 2) { return "رصيدان"; }
+  if (n >= 3 && n <= 10) { return n + " أرصدة"; } return n + " رصيدًا";
+}
+function discName(d) { return DISC[d] ? tr(DISC[d]) : d; }
+function route() { var h = (location.hash || "").replace(/^#/, ""); return ROUTES.indexOf(h) !== -1 ? h : "accueil"; }
+function go(r) { if (route() === r) { show(false); } else { location.hash = r; } }
+function isMember() { return D.me && D.me.role === "member"; }
+
+var toastTimer = null;
+function toast(msg) { var el = document.getElementById("toastMsg"); el.textContent = msg; clearTimeout(toastTimer); toastTimer = setTimeout(function () { el.textContent = ""; }, 5000); }
+var dlg = document.getElementById("dlg"), dlgBody = document.getElementById("dlgBody");
+function openDlg(html) { dlgBody.innerHTML = html; if (dlg.showModal) { if (!dlg.open) { dlg.showModal(); } } else { dlg.setAttribute("open", ""); } }
+function closeDlg() { if (dlg.open) { dlg.close(); } }
+
+/* ================= Appels au serveur ================= */
+async function api(method, path, body) {
+  var res;
+  try {
+    res = await fetch("/api" + path, { method: method, credentials: "same-origin",
+      headers: body ? { "Content-Type": "application/json" } : {}, body: body ? JSON.stringify(body) : undefined });
+  } catch (e) { throw { status: 0, code: "eNet" }; }
+  var data = null;
+  try { data = await res.json(); } catch (e) {}
+  if (!res.ok) {
+    var code = data && typeof data.detail === "string" ? data.detail : (res.status === 422 ? "required" : "eNet");
+    throw { status: res.status, code: code };
+  }
+  return data;
+}
+function errText(e) { var c = e && e.code; return K[c] ? t(c) : t("eNet"); }
+async function loadPublic() {
+  var r = await Promise.all([api("GET", "/config"), api("GET", "/plans"), api("GET", "/studios"), api("GET", "/sessions")]);
+  D.cfg = r[0]; D.plans = r[1]; D.studios = r[2]; D.sessions = r[3];
+}
+async function loadSessions() { D.sessions = await api("GET", "/sessions"); }
+async function loadMe() { try { D.me = await api("GET", "/me"); } catch (e) { D.me = null; } }
+function thisMonth() { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1); }
+async function loadDash() { var r = await Promise.all([api("GET", "/studio/dashboard"), api("GET", "/studio/statement?month=" + thisMonth())]); D.dash = r[0]; D.statement = r[1]; }
+async function loadAdmin() { D.adm = await api("GET", "/admin/overview"); if (!D.members) { D.members = await api("GET", "/admin/members"); } }
+
+/* ================= Fragments ================= */
+function empty(d, text) { return '<div class="empty d-' + d + '"><div class="tile">' + picto(d, 52) + "</div><p>" + text + "</p></div>"; }
+function note(key) { var m = formMsg[key]; return m ? '<p class="' + (m.ok ? "ok" : "err") + '" role="status">' + esc(m.text) + "</p>" : ""; }
+function classCard(c) {
+  var btn;
+  if (c.mine) { btn = '<span class="badge ink">' + t("booked") + "</span>"; }
+  else if (c.left <= 0) { btn = '<span class="badge line">' + t("full") + "</span>"; }
+  else { btn = '<button class="btn dark small" data-act="book" data-id="' + c.id + '">' + t("book") + "</button>"; }
+  var d = dateOf(c.start);
+  return '<article class="card pic lift d-' + esc(c.discipline) + '"><div class="cover tile"><span class="badge on">' + esc(discName(c.discipline)) + '</span><span class="pictos">' + picto(c.discipline, 84) + "</span></div>" +
+    '<div class="body"><div class="row" style="justify-content:space-between;flex-wrap:nowrap;align-items:flex-start"><h3>' + esc(c.title) + '</h3><span class="price">' + credits(c.credits) + "</span></div>" +
+    '<p class="meta"><span>' + esc(fmtDay(d)) + '</span><span dir="ltr">' + timeOf(c.start) + "</span><span>" + c.duration + " " + t("min") + "</span></p>" +
+    '<p class="meta"><span>' + esc(c.studio) + "</span><span>" + esc(c.area ? c.area + ", " + c.city : c.city) + "</span></p>" +
+    '<div class="foot"><span class="small">' + t("spots") + " " + c.left + "</span>" + btn + "</div></div></article>";
+}
+function statusLabel(b) { return t({ booked: "sBooked", past: "sPast", cancelled: "sCancelled", studio_cancelled: "sStudioCancel", attended: "sAttended" }[b.status] || "sPast"); }
+function field(id, label, attrs, cls) { return '<div class="field' + (cls ? " " + cls : "") + '"><label for="' + id + '">' + label + '</label><input id="' + id + '" ' + attrs + "></div>"; }
+
+/* ================= Pages ================= */
+var PAGES = {};
+
+PAGES.accueil = function () {
+  var next = D.sessions.slice(0, 3).map(classCard).join("");
+  var tiles = Object.keys(DISC).map(function (d) { return '<button class="tile d-' + d + '" data-act="disc" data-id="' + d + '">' + picto(d, 56) + "<span>" + tr(DISC[d]) + "</span></button>"; }).join("");
+  var icons = ["coin", "cal", "qr"];
+  var steps = [1, 2, 3].map(function (n) { return '<div class="card soft"><div class="row" style="justify-content:space-between"><span class="ico">' + ico(icons[n - 1], 28) + '</span><span class="step-n" dir="ltr">0' + n + "</span></div><h3>" + t("st" + n + "t") + '</h3><p class="muted">' + t("st" + n + "p") + "</p></div>"; }).join("");
+  var art = '<div class="art" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>' +
+    '<div class="tile t1 d-yoga">' + picto("yoga", 72) + '</div><div class="tile t2 d-boxe">' + picto("boxe", 72) + '</div><div class="tile t3 d-natation">' + picto("natation", 72) + '</div><div class="tile t4 d-danse">' + picto("danse", 60) + "</div>" +
+    '<div class="phone"><div class="phone-in"><b>gopass</b><div class="pq">' + qrSvg("GOPASS") + '</div><span class="pc">GP-7K2M9X</span><span class="pl"></span><span class="pl s"></span><span class="pb"></span></div></div></div>';
+  var pics = ["pilates", "yoga", "boxe", "danse"].map(function (d) { return '<span class="tile d-' + d + '">' + picto(d, 40) + "</span>"; }).join("");
+  return '<div class="wrap page"><section class="hero"><div class="hero-copy"><p class="eyebrow">' + t("eyebrow") + "</p><h1>" + t("tagline") + '</h1><p class="lead">' + t("heroSub") + "</p>" +
+    '<div class="row"><a class="btn accent" href="#cours">' + t("ctaClasses") + '</a><a class="btn" href="#formules">' + t("ctaPlans") + "</a></div></div><div>" + art + "</div></section>" +
+    '<section class="sec" style="padding-block:12px 0"><h2>' + t("discTitle") + '</h2><div class="tiles">' + tiles + "</div></section>" +
+    (next ? '<section class="sec" style="padding-block:12px 0"><div class="row" style="justify-content:space-between"><h2>' + t("nextClasses") + '</h2><a class="btn small" href="#cours">' + t("ctaClasses") + '</a></div><div class="grid">' + next + "</div></section>" : "") + "</div>" +
+    '<section class="band"><div class="wrap sec"><h2>' + t("howTitle") + '</h2><div class="grid">' + steps + "</div></div></section>" +
+    '<section class="band green dark"><div class="wrap sec"><div class="row">' + pics + "</div><h2>" + t("forStudios") + '</h2><p class="muted" style="font-size:18px;max-width:560px">' + t("forStudiosP") + '</p><div class="row"><a class="btn accent" href="#studios">' + t("becomePartner") + '</a><a class="btn" href="#espace-studio">' + t("nStudioSpace") + "</a></div></div></section>";
+};
+
+PAGES.cours = function () {
+  var list = D.sessions.filter(function (c) {
+    return (!F.city || c.city === F.city) && (!F.disc || c.discipline === F.disc) && (!F.day || c.start.slice(0, 10) === F.day) && (!F.studio || String(c.studio_id) === String(F.studio));
+  });
+  var cities = [], days = [];
+  D.studios.forEach(function (s) { if (cities.indexOf(s.city) === -1) { cities.push(s.city); } });
+  D.sessions.forEach(function (c) { var k = c.start.slice(0, 10); if (days.indexOf(k) === -1) { days.push(k); } });
+  var cityOpts = cities.map(function (c) { return '<option value="' + esc(c) + '"' + (F.city === c ? " selected" : "") + ">" + esc(c) + "</option>"; }).join("");
+  var discOpts = Object.keys(DISC).map(function (k) { return '<option value="' + k + '"' + (F.disc === k ? " selected" : "") + ">" + tr(DISC[k]) + "</option>"; }).join("");
+  var dayOpts = days.map(function (k) { return '<option value="' + k + '"' + (F.day === k ? " selected" : "") + ">" + esc(fmtDay(dateOf(k + "T12:00:00"))) + "</option>"; }).join("");
+  var st = F.studio ? D.studios.filter(function (s) { return String(s.id) === String(F.studio); })[0] : null;
+  var sf = st ? '<p class="row"><span class="badge line">' + t("studioFilter") + " " + esc(st.name) + '</span><button class="btn small" data-act="clear-studio">' + t("clear") + "</button></p>" : "";
+  return '<div class="wrap page"><h1>' + t("classesTitle") + "</h1>" +
+    '<div class="filters"><div class="field"><label for="f-city">' + t("fCity") + '</label><select id="f-city" data-filter="city"><option value="">' + t("fAll") + "</option>" + cityOpts + "</select></div>" +
+    '<div class="field"><label for="f-disc">' + t("fDisc") + '</label><select id="f-disc" data-filter="disc"><option value="">' + t("fAll") + "</option>" + discOpts + "</select></div>" +
+    '<div class="field"><label for="f-day">' + t("fDay") + '</label><select id="f-day" data-filter="day"><option value="">' + t("fAllDays") + "</option>" + dayOpts + "</select></div></div>" + sf +
+    '<p class="small">' + t("cancelRule").replace("12", D.cfg.cancel_hours || 12) + "</p>" +
+    (list.length ? '<div class="grid">' + list.map(classCard).join("") + "</div>" : empty(F.disc || "stretching", t("noClass"))) + "</div>";
+};
+
+PAGES.studios = function () {
+  var cards = D.studios.map(function (s) {
+    var discs = s.disciplines.length ? s.disciplines : ["stretching"];
+    return '<article class="card pic lift d-' + esc(discs[0]) + '"><div class="cover tile"><span class="badge on">' + esc(s.city) + '</span><span class="pictos">' + discs.slice(0, 3).map(function (d) { return picto(d, 64); }).join("") + '</span></div><div class="body"><h3>' + esc(s.name) + '</h3><p class="meta"><span>' + esc(s.area ? s.area + ", " + s.city : s.city) + "</span></p><p>" + s.disciplines.map(function (d) { return '<span class="badge">' + esc(discName(d)) + "</span>"; }).join(" ") + '</p><p class="muted">' + esc(s.desc) + '</p><div class="foot"><button class="btn small" data-act="studio-classes" data-id="' + s.id + '">' + t("seeClasses") + "</button></div></div></article>";
+  }).join("");
+  return '<div class="wrap page"><h1>' + t("studiosTitle") + "</h1>" + (cards ? '<div class="grid">' + cards + "</div>" : empty("yoga", t("noStudios"))) +
+    '<section style="display:flex;flex-direction:column;gap:16px;margin-top:24px"><h2>' + t("partnerTitle") + '</h2><p class="lead">' + t("partnerP") + "</p>" +
+    '<form class="stack" data-form="partner" novalidate>' + field("p-name", t("pName"), 'name="name" autocomplete="organization"') + field("p-city", t("pCity"), 'name="city"') +
+    field("p-email", t("pEmail"), 'name="email" type="email" dir="ltr" autocomplete="email"') + field("p-disc", t("pDisc"), 'name="disciplines"') +
+    '<button class="btn dark" type="submit">' + t("send") + "</button>" + note("partner") + "</form></section></div>";
+};
+
+PAGES.formules = function () {
+  var cards = D.plans.map(function (p, i) {
+    var cur = D.me && D.me.plan && D.me.plan.id === p.id, rec = D.plans.length === 3 && i === 1;
+    return '<article class="card lift' + (rec ? " rec" : "") + '"><div class="row" style="justify-content:space-between"><h3 style="font-size:24px">' + esc(tr(p.name)) + "</h3>" + (rec ? '<span class="badge ink">' + t("rec") + "</span>" : "") + "</div>" +
+      "<p>" + esc(tr(p.desc)) + '</p><p><span class="big">' + credits(p.credits) + '</span> <span class="small">' + t("perMonth") + '</span></p><p class="price" style="font-size:22px">' + money(p.price) + "</p>" +
+      (cur ? '<p><span class="badge line">' + t("current") + "</span></p>" : "") +
+      '<div class="foot"><button class="btn dark" data-act="plan" data-id="' + p.id + '">' + (cur ? t("renew") : t("activate")) + "</button></div></article>";
+  }).join("");
+  return '<div class="wrap page"><h1>' + t("plansTitle") + '</h1><p class="lead">' + t("plansSub") + '</p><p class="notice">' + t(D.cfg.online_payment ? "payInfo" : "ePayOff") + '</p><div class="grid">' + cards + "</div></div>";
+};
+
+PAGES.compte = function () {
+  if (!D.me) {
+    var reg = AUTH === "register";
+    return '<div class="wrap page"><h1>' + t(reg ? "signupTitle" : "loginTitle") + '</h1><p class="lead">' + t("signupP") + "</p>" +
+      '<form class="stack" data-form="' + (reg ? "signup" : "login") + '" novalidate>' + (reg ? field("u-name", t("name"), 'name="name" autocomplete="given-name"') : "") +
+      field("u-email", t("email"), 'name="email" type="email" dir="ltr" autocomplete="email"') +
+      field("u-pw", t("password"), 'name="password" type="password" dir="ltr" autocomplete="' + (reg ? "new-password" : "current-password") + '"') +
+      (reg ? '<p class="small">' + t("pwHint") + "</p>" : "") +
+      '<button class="btn dark" type="submit">' + t(reg ? "create" : "loginBtn") + "</button>" + note("auth") +
+      '<p class="small">' + t(reg ? "haveAccount" : "noAccount") + ' <button type="button" class="btn small" data-act="auth-mode">' + t(reg ? "loginBtn" : "create") + "</button></p></form></div>";
+  }
+  var me = D.me;
+  if (me.role !== "member") {
+    return '<div class="wrap page"><h1>' + t("hello") + " " + esc(me.name) + '</h1><div class="row"><a class="btn accent" href="#' + (me.role === "admin" ? "admin" : "espace-studio") + '">' + (me.role === "admin" ? "Administration" : t("nStudioSpace")) + '</a><button class="btn" data-act="logout">' + t("logout") + "</button></div></div>";
+  }
+  var up = me.bookings.filter(function (b) { return b.upcoming; }).sort(function (a, b) { return a.start < b.start ? -1 : 1; });
+  var hist = me.bookings.filter(function (b) { return !b.upcoming; });
+  function row(b) {
+    var d = dateOf(b.start);
+    return '<div class="item d-' + esc(b.discipline) + '"><span class="tile">' + picto(b.discipline, 36) + '</span><div class="grow"><h3>' + esc(b.title) + '</h3><p class="meta"><span>' + esc(fmtDay(d)) + '</span><span dir="ltr">' + timeOf(b.start) + "</span><span>" + esc(b.studio) + "</span><span>" + credits(b.credits) + "</span></p></div>" +
+      (b.upcoming ? '<div class="row"><button class="btn dark small" data-act="ticket" data-id="' + b.id + '">' + t("showQr") + '</button><button class="btn small danger" data-act="cancel" data-id="' + b.id + '">' + t("cancel") + "</button></div>"
+                  : '<span class="badge line">' + statusLabel(b) + "</span>") + "</div>";
+  }
+  return '<div class="wrap page"><h1>' + t("hello") + " " + esc(me.name) + "</h1>" +
+    '<div class="stat"><div><span class="small">' + t("balance") + "</span><b>" + credits(me.credits) + '</b></div><div><span class="small">' + t("plan") + '</span><b style="font-size:24px">' + (me.plan ? esc(tr(me.plan.name)) : t("noPlan")) + "</b>" +
+    (me.plan_expires ? '<span class="small">' + t("expires") + " " + esc(fmtDate(dateOf(me.plan_expires))) + "</span>" : "") + "</div></div>" +
+    '<div class="row"><a class="btn accent" href="#cours">' + t("ctaClasses") + '</a><a class="btn" href="#formules">' + t("ctaPlans") + "</a></div>" +
+    "<h2>" + t("upcoming") + '</h2><div class="list">' + (up.length ? up.map(row).join("") : empty("yoga", t("noUpcoming"))) + "</div>" +
+    (hist.length ? "<h2>" + t("history") + '</h2><div class="list">' + hist.map(row).join("") + "</div>" : "") +
+    '<div class="row"><button class="btn small" data-act="logout">' + t("logout") + '</button><button class="btn small danger" data-act="del-account">' + t("delAccount") + "</button></div></div>";
+};
+
+PAGES["espace-studio"] = function () {
+  if (!D.me || D.me.role !== "studio" || !D.dash) {
+    return '<div class="wrap page"><h1>' + t("esTitle") + '</h1><p class="lead">' + t("esOnly") + '</p><div class="row"><a class="btn dark" href="#compte">' + t("loginBtn") + '</a><a class="btn" href="#studios">' + t("becomePartner") + "</a></div></div>";
+  }
+  var dash = D.dash, st = dash.studio, byDay = {}, order = [];
+  dash.sessions.forEach(function (c) { var k = c.start.slice(0, 10); if (!byDay[k]) { byDay[k] = []; order.push(k); } byDay[k].push(c); });
+  function slot(c) {
+    var off = c.status !== "open";
+    return '<button type="button" class="slot d-' + esc(c.discipline) + (off ? " off" : "") + '" data-act="' + (off ? "restore" : "slot") + '" data-id="' + c.id + '"><span class="tm" dir="ltr">' + timeOf(c.start) + "</span><b>" + esc(c.title) + '</b><span class="small">' +
+      (off ? t("cancelledTag") + " · " + t("restore") : "Gopass " + c.taken + " / " + c.spots + " · " + credits(c.credits)) + '</span><span class="small">' + (c.recurring ? t("recurring") : t("once")) + "</span></button>";
+  }
+  var week = order.map(function (k) { return '<div class="day"><h3>' + esc(fmtShort(dateOf(k + "T12:00:00"))) + "</h3>" + byDay[k].map(slot).join("") + "</div>"; }).join("");
+  var ser = dash.series.map(function (x) {
+    return '<div class="item d-' + esc(x.discipline) + '"><span class="tile">' + picto(x.discipline, 36) + '</span><div class="grow"><h3>' + esc(x.title) + '</h3><p class="meta"><span>' + x.days.map(dayName).join(" · ") + '</span><span dir="ltr">' + esc(x.time) + "</span><span>" + x.duration + " " + t("min") + "</span><span>Gopass " + x.spots + " " + t("ofCap") + " " + x.capacity + "</span><span>" + credits(x.credits) + "</span></p></div>" +
+      '<button class="btn small danger" data-act="series-del" data-id="' + x.id + '">' + t("seriesDel") + "</button></div>";
+  }).join("");
+  var dOpts = Object.keys(DISC).map(function (d) { return '<option value="' + d + '">' + tr(DISC[d]) + "</option>"; }).join("");
+  var checks = [0, 1, 2, 3, 4, 5, 6].map(function (i) { return '<label for="c-day-' + i + '"><input type="checkbox" id="c-day-' + i + '" name="day" value="' + i + '">' + dayName(i) + "</label>"; }).join("");
+  var lines = (D.statement ? D.statement.lines : []).map(function (l) {
+    return "<tr><td>" + esc(fmtShort(dateOf(l.date))) + " · " + timeOf(l.date) + "</td><td>" + esc(l.title) + "</td><td>" + t({ attended: "kAttended", no_show: "kNoShow", late_cancel: "kLate" }[l.kind]) + '</td><td class="num">' + money(l.amount) + "</td></tr>";
+  }).join("");
+  return '<div class="wrap page"><h1>' + esc(st.name) + '</h1><p class="lead">' + t("esP") + "</p>" +
+    '<div class="stat"><div><span class="small">' + t("esClasses") + "</span><b>" + dash.stats.upcoming + '</b></div><div><span class="small">' + t("esBookings") + "</span><b>" + dash.stats.bookings + '</b></div><div><span class="small">' + t("esChecked") + "</span><b>" + dash.stats.attended + "</b></div></div>" +
+    "<h2>" + t("checkTitle") + '</h2><p class="small">' + t("checkHint") + "</p>" +
+    '<form class="cols" data-form="checkin" novalidate>' + field("ck-code", t("checkLabel"), 'name="code" dir="ltr" autocomplete="off" placeholder="GP-XXXXXX"', "") + '<button class="btn dark" type="submit">' + t("check") + "</button></form>" + note("checkin") +
+    "<h2>" + t("planTitle") + '</h2><p class="small">' + t("planHint") + '</p><div class="planner"><div class="week">' + (week || '<p class="notice">' + t("noSlot") + "</p>") + "</div></div>" +
+    "<h2>" + t("seriesTitle") + '</h2><div class="list">' + (ser || '<p class="notice">' + t("noSeries") + "</p>") + "</div>" +
+    "<h2>" + t("addTitle") + '</h2><form class="cols" data-form="addclass" novalidate>' + field("c-title", t("cTitle"), 'name="title"') +
+    '<div class="field"><label for="c-disc">' + t("fDisc") + '</label><select id="c-disc" name="discipline">' + dOpts + "</select></div>" +
+    '<div class="field"><label for="c-mode">' + t("cMode") + '</label><select id="c-mode" name="mode"><option value="weekly">' + t("recurring") + '</option><option value="once">' + t("once") + "</option></select></div>" +
+    '<fieldset class="field wide" id="c-days-box"><legend>' + t("cDays") + '</legend><div class="checks">' + checks + "</div></fieldset>" +
+    '<div class="field" id="c-date-box" hidden><label for="c-date">' + t("cDate") + '</label><input id="c-date" name="date" type="date"></div>' +
+    field("c-time", t("cTime"), 'name="time" type="time" value="18:00"') + field("c-dur", t("cDur"), 'name="duration" type="number" min="15" max="180" value="60"') +
+    field("c-cap", t("cap"), 'name="capacity" type="number" min="1" max="60" value="12"') + field("c-spots", t("cSpots"), 'name="spots" type="number" min="1" max="60" value="4"') +
+    field("c-ref", t("cRef"), 'name="reference_price" type="number" min="100" max="50000" step="50" value="800"') +
+    '<p class="small" style="flex:1 1 100%">' + t("refHint") + '</p><button class="btn dark" type="submit">' + t("add") + "</button></form>" + note("addclass") +
+    "<h2>" + t("statement") + "</h2>" + (lines ? '<div class="tablebox"><table><thead><tr><th>' + t("cDate") + "</th><th>" + t("cTitle") + "</th><th></th><th>" + t("stTotal") + "</th></tr></thead><tbody>" + lines + '</tbody><tfoot><tr><td colspan="3">' + t("stTotal") + '</td><td class="num">' + money(D.statement.total) + "</td></tr></tfoot></table></div>" : '<p class="notice">' + t("noLines") + "</p>") +
+    '<p><button class="btn small" data-act="logout">' + t("logout") + "</button></p></div>";
+};
+
+/* L'administration est en français : elle n'est utilisée que par l'équipe Gopass. */
+PAGES.admin = function () {
+  if (!D.me || D.me.role !== "admin" || !D.adm) {
+    return '<div class="wrap page"><h1>Administration</h1><p class="lead">Accès réservé à l\'équipe Gopass.</p><p><a class="btn dark" href="#compte">' + t("loginBtn") + "</a></p></div>";
+  }
+  var a = D.adm;
+  function table(head, rows) { return rows.length ? '<div class="tablebox"><table><thead><tr>' + head.map(function (h) { return "<th>" + h + "</th>"; }).join("") + "</tr></thead><tbody>" + rows.join("") + "</tbody></table></div>" : '<p class="notice">Rien à afficher.</p>'; }
+  var planOpts = a.plans.map(function (p) { return '<option value="' + p.id + '">' + esc(p.name[0]) + " · " + p.credits + " crédits · " + p.price + " DA</option>"; }).join("");
+  var studios = a.studios.map(function (s) { return "<tr><td>" + esc(s.name) + "</td><td>" + esc(s.city) + "</td><td>" + Math.round(s.payout_rate * 100) + ' %</td><td><button class="btn small" data-act="adm-studio" data-id="' + s.id + '" data-on="' + (s.active ? "0" : "1") + '">' + (s.active ? "Suspendre" : "Réactiver") + "</button></td></tr>"; });
+  var plans = a.plans.map(function (p) {
+    return '<form class="cols" data-form="adm-plan" data-id="' + p.id + '" novalidate>' + field("pl-fr-" + p.id, "Nom (FR)", 'name="name_fr" value="' + esc(p.name[0]) + '"') + field("pl-en-" + p.id, "Nom (EN)", 'name="name_en" value="' + esc(p.name[1]) + '"') + field("pl-ar-" + p.id, "Nom (AR)", 'name="name_ar" value="' + esc(p.name[2]) + '"') +
+      field("pl-cr-" + p.id, "Crédits", 'name="credits" type="number" min="1" value="' + p.credits + '"') + field("pl-pr-" + p.id, "Prix (DA)", 'name="price_dzd" type="number" min="100" value="' + p.price + '"') +
+      '<div class="field"><label for="pl-ac-' + p.id + '">Proposée</label><select id="pl-ac-' + p.id + '" name="is_active"><option value="1"' + (p.active ? " selected" : "") + '>Oui</option><option value="0"' + (p.active ? "" : " selected") + '>Non</option></select></div>' +
+      '<input type="hidden" name="desc_fr" value="' + esc(p.desc[0]) + '"><input type="hidden" name="desc_en" value="' + esc(p.desc[1]) + '"><input type="hidden" name="desc_ar" value="' + esc(p.desc[2]) + '"><input type="hidden" name="sort" value="' + p.sort + '">' +
+      '<button class="btn dark small" type="submit">Enregistrer</button></form>';
+  }).join("");
+  var series = a.series.map(function (s) { return "<tr><td>" + esc(s.studio) + "</td><td>" + esc(s.title) + "</td><td>" + s.reference_price + ' DA</td><td><form class="inline" data-form="adm-credits" data-id="' + s.id + '" novalidate><label class="sr" for="sc-' + s.id + '">Crédits</label><input id="sc-' + s.id + '" name="credits" type="number" min="1" max="100" value="' + s.credits + '"><button class="btn small" type="submit">OK</button></form></td></tr>'; });
+  var members = (D.members || []).map(function (m) { return "<tr><td>" + esc(m.name) + '</td><td dir="ltr">' + esc(m.email) + "</td><td>" + m.credits + "</td><td>" + esc(m.plan || "") + '</td><td><form class="inline" data-form="adm-adjust" data-id="' + m.id + '" novalidate><label class="sr" for="ad-' + m.id + '">Crédits à ajouter ou retirer</label><input id="ad-' + m.id + '" name="delta" type="number" placeholder="+/-" style="width:80px"><label class="sr" for="ar-' + m.id + '">Motif</label><input id="ar-' + m.id + '" name="reason" placeholder="Motif"><button class="btn small" type="submit">OK</button></form></td></tr>'; });
+  var apps = a.applications.map(function (x) { return "<tr><td>" + esc(x.name) + "</td><td>" + esc(x.city) + '</td><td dir="ltr">' + esc(x.email) + "</td><td>" + esc(x.disciplines) + "</td><td>" + (x.handled ? "Traité" : '<button class="btn small" data-act="adm-handled" data-id="application:' + x.id + '">Marquer traité</button>') + "</td></tr>"; });
+  var msgs = a.messages.map(function (x) { return "<tr><td>" + esc(x.name) + '</td><td dir="ltr">' + esc(x.email) + "</td><td>" + esc(x.message) + "</td><td>" + (x.handled ? "Traité" : '<button class="btn small" data-act="adm-handled" data-id="message:' + x.id + '">Marquer traité</button>') + "</td></tr>"; });
+  var pays = a.payments.map(function (p) { return "<tr><td>" + esc(p.at.slice(0, 16).replace("T", " ")) + '</td><td dir="ltr">' + esc(p.email) + "</td><td>" + esc(p.plan) + "</td><td>" + p.amount + " DA</td><td>" + (p.method === "cash" ? "Espèces" : "En ligne") + "</td><td>" + ({ paid: "Payé", pending: "En attente", failed: "Échoué" }[p.status] || p.status) + "</td></tr>"; });
+  var sts = (D.statements || []).map(function (s) { return "<tr><td>" + esc(s.studio) + "</td><td>" + s.count + '</td><td class="num">' + s.total + " DA</td></tr>"; });
+  return '<div class="wrap page"><h1>Administration</h1>' +
+    '<div class="stat"><div><span class="small">Membres</span><b>' + a.counts.members + '</b></div><div><span class="small">Studios actifs</span><b>' + a.counts.studios + '</b></div><div><span class="small">Réservations</span><b>' + a.counts.bookings + '</b></div><div><span class="small">Paiements reçus</span><b>' + a.counts.paid + "</b></div></div>" +
+    "<h2>Enregistrer un paiement en espèces</h2>" + '<form class="cols" data-form="adm-cash" novalidate>' + field("cash-email", "E-mail du membre", 'name="email" type="email" dir="ltr"') + '<div class="field"><label for="cash-plan">Formule</label><select id="cash-plan" name="plan_id">' + planOpts + '</select></div><button class="btn dark" type="submit">Activer la formule</button></form>' + note("adm-cash") +
+    "<h2>Studios</h2>" + table(["Studio", "Ville", "Reversement", ""], studios) +
+    '<h3>Ajouter un studio et son gérant</h3><form class="cols" data-form="adm-studio" novalidate>' + field("ns-name", "Nom du studio", 'name="name"') + field("ns-city", "Ville", 'name="city"') + field("ns-area", "Quartier", 'name="area"') + field("ns-desc", "Description", 'name="description"', "wide") +
+    field("ns-mn", "Nom du gérant", 'name="manager_name"') + field("ns-me", "E-mail du gérant", 'name="manager_email" type="email" dir="ltr"') + field("ns-mp", "Mot de passe provisoire (8 caractères min.)", 'name="manager_password" type="text" dir="ltr" autocomplete="off"') + '<button class="btn dark" type="submit">Créer le studio</button></form>' + note("adm-studio") +
+    "<h2>Demandes de studios</h2>" + table(["Studio", "Ville", "E-mail", "Disciplines", ""], apps) +
+    "<h2>Formules</h2>" + plans + note("adm-plan") +
+    "<h2>Prix des cours en crédits</h2>" + table(["Studio", "Cours", "Tarif de référence", "Crédits"], series) + note("adm-credits") +
+    "<h2>Membres</h2>" + '<form class="cols" data-form="adm-search" novalidate>' + field("ms-q", "Rechercher par nom ou e-mail", 'name="q"') + '<button class="btn" type="submit">Rechercher</button></form>' + table(["Nom", "E-mail", "Crédits", "Formule", "Ajuster les crédits"], members) + note("adm-adjust") +
+    "<h2>Paiements</h2>" + table(["Date", "Membre", "Formule", "Montant", "Moyen", "État"], pays) +
+    "<h2>Relevés mensuels des studios</h2>" + '<form class="cols" data-form="adm-statements" novalidate>' + field("st-month", "Mois", 'name="month" type="month" value="' + thisMonth() + '"') + '<button class="btn" type="submit">Afficher</button></form>' + (D.statements ? table(["Studio", "Réservations dues", "Montant à reverser"], sts) : "") +
+    "<h2>Messages reçus</h2>" + table(["Nom", "E-mail", "Message", ""], msgs) +
+    '<p><button class="btn small" data-act="logout">' + t("logout") + "</button></p></div>";
+};
+
+PAGES.faq = function () {
+  var qs = [1, 2, 3, 4, 5, 6].map(function (n) { return "<details><summary>" + t("q" + n) + "</summary><p>" + t("a" + n).replace("12", D.cfg.cancel_hours || 12) + "</p></details>"; }).join("");
+  return '<div class="wrap page" style="max-width:820px"><h1>' + t("faqTitle") + "</h1><div>" + qs + "</div></div>";
+};
+
+PAGES.contact = function () {
+  return '<div class="wrap page"><h1>' + t("contactTitle") + '</h1><form class="stack" data-form="contact" novalidate>' + field("m-name", t("name"), 'name="name" autocomplete="given-name"') +
+    field("m-email", t("email"), 'name="email" type="email" dir="ltr" autocomplete="email"') +
+    '<div class="field"><label for="m-msg">' + t("msg") + '</label><textarea id="m-msg" name="message"></textarea></div><button class="btn dark" type="submit">' + t("send") + "</button>" + note("contact") + "</form></div>";
+};
+
+PAGES.confidentialite = function () {
+  return '<div class="wrap page" style="max-width:820px"><h1>' + t("nPrivacy") + '</h1><ul class="list"><li class="notice">' + t("pv1") + '</li><li class="notice">' + t("pv2") + '</li><li class="notice">' + t("pv3") + '</li><li class="notice">' + t("pv4") + "</li></ul></div>";
+};
+
+/* ================= Rendu ================= */
+function renderChrome() {
+  var r = route();
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  function link(id, key) { return '<a class="link" href="#' + id + '"' + (r === id ? ' aria-current="page"' : "") + ">" + t(key) + "</a>"; }
+  var acc;
+  if (!D.me) { acc = '<a class="btn small dark" href="#compte">' + t("nLogin") + "</a>"; }
+  else if (D.me.role === "member") { acc = '<a class="btn small' + (r === "compte" ? " dark" : "") + '" href="#compte">' + ico("coin", 20) + "<span><bdi>" + esc(D.me.name) + "</bdi> · <bdi>" + credits(D.me.credits) + "</bdi></span></a>"; }
+  else { acc = '<a class="btn small dark" href="#' + (D.me.role === "admin" ? "admin" : "espace-studio") + '">' + ico("user", 20) + "<span><bdi>" + esc(D.me.name) + "</bdi></span></a>"; }
+  var langs = '<div class="langs" role="group" aria-label="' + t("langLabel") + '">' + [["fr", "FR"], ["en", "EN"], ["ar", "عربي"]].map(function (l) {
+    return '<button type="button" data-act="lang" data-id="' + l[0] + '" lang="' + l[0] + '" aria-pressed="' + (lang === l[0]) + '">' + l[1] + "</button>"; }).join("") + "</div>";
+  var nav = document.getElementById("nav");
+  nav.setAttribute("aria-label", t("navLabel"));
+  nav.innerHTML = link("cours", "nClasses") + link("studios", "nStudios") + link("formules", "nPlans") + langs + acc;
+  document.getElementById("foot").innerHTML = '<div><span class="brand" dir="ltr" style="color:#fff;min-height:0">gopass</span></div><nav aria-label="' + t("footLabel") + '">' +
+    [["accueil", "nHome"], ["cours", "nClasses"], ["studios", "nStudios"], ["formules", "nPlans"], ["espace-studio", "nStudioSpace"], ["faq", "nFaq"], ["contact", "nContact"], ["confidentialite", "nPrivacy"]].map(function (x) {
+      return '<a href="#' + x[0] + '">' + t(x[1]) + "</a>"; }).join("") + "</nav><p>" + t("rights") + "</p>";
+  var tb = document.getElementById("tabbar");
+  tb.setAttribute("aria-label", t("navLabel"));
+  tb.innerHTML = [["accueil", "nHome", "home"], ["cours", "nClasses", "cal"], ["studios", "nStudios", "pin"], ["compte", "nAccount", "user"]].map(function (x) {
+    return '<a href="#' + x[0] + '"' + (r === x[0] ? ' aria-current="page"' : "") + ">" + ico(x[2], 22) + "<span>" + t(x[1]) + "</span></a>"; }).join("");
+  document.title = "Gopass — " + t("tagline");
+}
+function render(isNav) {
+  renderChrome();
+  var app = document.getElementById("app");
+  app.innerHTML = D.ready ? PAGES[route()]() : '<div class="wrap page"><p class="notice">' + t("loading") + "</p></div>";
+  if (isNav) { window.scrollTo(0, 0); try { app.focus({ preventScroll: true }); } catch (e) {} }
+}
+/* Charge ce dont la page a besoin, puis l'affiche. */
+async function show(isNav) {
+  var r = route();
+  try {
+    if (r === "espace-studio" && D.me && D.me.role === "studio") { await loadDash(); }
+    if (r === "admin" && D.me && D.me.role === "admin") { await loadAdmin(); }
+  } catch (e) { toast(errText(e)); }
+  render(isNav);
+}
+async function reload() { await Promise.all([loadMe(), loadSessions()]); await show(false); }
+
+/* ================= Actions ================= */
+function confirmDlg(title, bodyHtml, act, id) {
+  openDlg("<h2>" + title + "</h2>" + bodyHtml + '<div class="row"><button class="btn dark" data-act="' + act + '" data-id="' + id + '">' + t("confirm") + '</button><button class="btn" data-act="dlg-close">' + t("back") + "</button></div>");
+}
+async function run(fn, okText) {
+  if (busy) { return; }
+  busy = true;
+  try { await fn(); if (okText) { toast(okText); } }
+  catch (e) { toast(errText(e)); }
+  finally { busy = false; }
+}
+var ACT = {
+  lang: function (id) { lang = id; try { localStorage.setItem("gopass-lang", id); } catch (e) {} if (D.me) { api("PATCH", "/me", { lang: id }).catch(function () {}); } render(false); },
+  disc: function (id) { F = { city: "", disc: id, day: "", studio: "" }; go("cours"); },
+  "studio-classes": function (id) { F = { city: "", disc: "", day: "", studio: id }; go("cours"); },
+  "clear-studio": function () { F.studio = ""; render(false); },
+  "auth-mode": function () { AUTH = AUTH === "register" ? "login" : "register"; formMsg = {}; render(false); },
+  logout: function () { run(async function () { await api("POST", "/auth/logout"); D.me = null; D.dash = null; D.adm = null; D.members = null; await loadSessions(); go("accueil"); }); },
+  book: function (id) {
+    var c = D.sessions.filter(function (x) { return String(x.id) === String(id); })[0]; if (!c) { return; }
+    if (!D.me) { toast(t("needAccount")); go("compte"); return; }
+    if (!isMember()) { toast(t("forbidden")); return; }
+    if (D.me.credits < c.credits) { toast(t("needCredits")); go("formules"); return; }
+    confirmDlg(t("confirmBook"), "<p><b>" + esc(c.title) + "</b><br>" + esc(c.studio) + "<br>" + esc(fmtDay(dateOf(c.start))) + ' · <span dir="ltr">' + timeOf(c.start) + "</span></p><p>" + t("cost") + " <b>" + credits(c.credits) + "</b><br>" + t("after") + " <b>" + credits(D.me.credits - c.credits) + '</b></p><p class="small">' + t("cancelRule").replace("12", D.cfg.cancel_hours || 12) + "</p>", "book-yes", c.id);
+  },
+  "book-yes": function (id) { closeDlg(); run(async function () { try { D.me = await api("POST", "/bookings", { session_id: Number(id) }); } finally { await loadSessions(); render(false); } }, t("bookedOk")); },
+  ticket: function (id) {
+    var b = D.me.bookings.filter(function (x) { return String(x.id) === String(id); })[0]; if (!b) { return; }
+    var q = qrSvg("GOPASS:" + b.code);
+    openDlg("<h2>" + t("ticketTitle") + "</h2>" + (q ? '<div class="qr" role="img" aria-label="QR code ' + esc(b.code) + '">' + q + "</div>" : '<p class="notice">' + t("qrMissing") + "</p>") + '<p class="code">' + esc(b.code) + "</p><p><b>" + esc(b.title) + "</b><br>" + esc(b.studio) + "<br>" + esc(fmtDay(dateOf(b.start))) + ' · <span dir="ltr">' + timeOf(b.start) + '</span></p><p class="small">' + t("ticketP") + '</p><button class="btn dark" data-act="dlg-close">' + t("close") + "</button>");
+  },
+  cancel: function (id) {
+    var b = D.me.bookings.filter(function (x) { return String(x.id) === String(id); })[0]; if (!b) { return; }
+    confirmDlg(t("cancelTitle"), "<p><b>" + esc(b.title) + "</b></p><p>" + (b.refundable ? t("refundYes") + " <b>" + credits(b.credits) + "</b>" : t("refundNo").replace("12", D.cfg.cancel_hours || 12)) + "</p>", "cancel-yes", b.id);
+  },
+  "cancel-yes": function (id) { closeDlg(); run(async function () { D.me = await api("POST", "/bookings/" + id + "/cancel"); await loadSessions(); render(false); }, t("cancelOk")); },
+  plan: function (id) {
+    if (!D.me) { toast(t("needAccount")); go("compte"); return; }
+    if (!isMember()) { toast(t("forbidden")); return; }
+    if (!D.cfg.online_payment) { toast(t("ePayOff")); return; }
+    var p = D.plans.filter(function (x) { return String(x.id) === String(id); })[0]; if (!p) { return; }
+    confirmDlg(esc(tr(p.name)), "<p><b>" + credits(p.credits) + "</b> · " + money(p.price) + "</p><p>" + t("confirmPay") + "</p>", "plan-yes", p.id);
+  },
+  "plan-yes": function (id) { closeDlg(); run(async function () { var r = await api("POST", "/payments/checkout", { plan_id: Number(id) }); location.href = r.url; }); },
+  "del-account": function () { confirmDlg(t("delAccount"), "<p>" + t("delQ") + "</p>", "del-yes", ""); },
+  "del-yes": function () { closeDlg(); run(async function () { await api("DELETE", "/me"); D.me = null; await loadSessions(); go("accueil"); }, t("delOk")); },
+  slot: function (id) {
+    var c = D.dash.sessions.filter(function (x) { return String(x.id) === String(id); })[0]; if (!c) { return; }
+    openDlg("<h2>" + t("slotTitle") + "</h2><p><b>" + esc(c.title) + "</b><br>" + esc(fmtDay(dateOf(c.start))) + ' · <span dir="ltr">' + timeOf(c.start) + "</span><br>" + (c.recurring ? t("recurring") : t("once")) + " · " + credits(c.credits) + "</p>" +
+      '<form class="dform" data-form="slot" data-id="' + c.id + '" novalidate><div class="field"><label for="s-spots">' + t("gSpots") + '</label><input id="s-spots" name="spots" type="number" min="1" max="' + c.capacity + '" value="' + c.spots + '"><span class="small">' + t("capIs") + " " + c.capacity + " · " + t("bookedCount") + " " + c.taken + '</span></div><p class="err" id="slotErr" role="status"></p>' +
+      '<button class="btn dark" type="submit">' + t("save") + '</button></form><div class="row"><button class="btn small danger" data-act="remove" data-id="' + c.id + '">' + t("cancelSlot") + '</button><button class="btn small" data-act="dlg-close">' + t("back") + "</button></div>");
+  },
+  remove: function (id) { confirmDlg(t("confirmRemove"), "<p>" + t("removeQ") + "</p>", "remove-yes", id); },
+  "remove-yes": function (id) { closeDlg(); run(async function () { await api("POST", "/studio/sessions/" + id + "/cancel"); await show(false); }, t("removed")); },
+  restore: function (id) { run(async function () { await api("POST", "/studio/sessions/" + id + "/restore"); await show(false); }, t("restored")); },
+  "series-del": function (id) { confirmDlg(t("seriesDel"), "<p>" + t("seriesQ") + "</p>", "series-del-yes", id); },
+  "series-del-yes": function (id) { closeDlg(); run(async function () { await api("DELETE", "/studio/series/" + id); await show(false); }, t("seriesGone")); },
+  "adm-studio": function (id, el) { run(async function () { await api("PATCH", "/admin/studios/" + id, { active: el.getAttribute("data-on") === "1" }); await loadPublic(); await show(false); }, "Studio mis à jour."); },
+  "adm-handled": function (id) { var p = id.split(":"); run(async function () { await api("POST", "/admin/handled", { kind: p[0], id: Number(p[1]) }); await show(false); }); },
+  "dlg-close": function () { closeDlg(); }
+};
+
+var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function val(form, name) { var el = form.elements[name]; return el ? (el.value || "").trim() : ""; }
+function num(form, name) { return parseInt(val(form, name), 10); }
+function bad(key) { return { ok: false, text: t(key) }; }
+/* Chaque formulaire renvoie {ok, text} à afficher, ou rien. `key` est l'emplacement du message. */
+var FORMS = {
+  signup: { key: "auth", run: async function (f) {
+    var name = val(f, "name"), email = val(f, "email").toLowerCase(), pw = f.elements.password.value;
+    if (!name) { return bad("required"); } if (!EMAIL_RE.test(email)) { return bad("badEmail"); } if (pw.length < 8) { return bad("eShortPw"); }
+    D.me = await api("POST", "/auth/register", { name: name, email: email, password: pw, lang: lang }); await loadSessions();
+  } },
+  login: { key: "auth", run: async function (f) {
+    var email = val(f, "email").toLowerCase(), pw = f.elements.password.value;
+    if (!EMAIL_RE.test(email) || !pw) { return bad("eLogin"); }
+    try { D.me = await api("POST", "/auth/login", { email: email, password: pw }); }
+    catch (e) { if (e.status === 422) { return bad("eLogin"); } throw e; }
+    await loadSessions();
+    if (D.me.role === "studio") { location.hash = "espace-studio"; } else if (D.me.role === "admin") { location.hash = "admin"; }
+  } },
+  partner: { key: "partner", run: async function (f) {
+    var b = { name: val(f, "name"), city: val(f, "city"), email: val(f, "email").toLowerCase(), disciplines: val(f, "disciplines") };
+    if (b.name.length < 2 || b.city.length < 2 || b.disciplines.length < 2) { return bad("required"); } if (!EMAIL_RE.test(b.email)) { return bad("badEmail"); }
+    await api("POST", "/applications", b); return { ok: true, text: t("sentPartner") };
+  } },
+  contact: { key: "contact", run: async function (f) {
+    var b = { name: val(f, "name"), email: val(f, "email").toLowerCase(), message: val(f, "message") };
+    if (!b.name || b.message.length < 2) { return bad("required"); } if (!EMAIL_RE.test(b.email)) { return bad("badEmail"); }
+    await api("POST", "/contact", b); return { ok: true, text: t("sent") };
+  } },
+  checkin: { key: "checkin", run: async function (f) {
+    var code = val(f, "code"); if (code.length < 3) { return bad("checkNo"); }
+    var r = await api("POST", "/studio/checkin", { code: code }); return { ok: true, text: t("checkOk") + " " + r.name + " — " + r.title };
+  } },
+  addclass: { key: "addclass", run: async function (f) {
+    var b = { title: val(f, "title"), discipline: val(f, "discipline"), time: val(f, "time"), duration: num(f, "duration"), capacity: num(f, "capacity"), spots: num(f, "spots"), reference_price: num(f, "reference_price") };
+    if (b.title.length < 2) { return bad("required"); }
+    if (!/^\d\d:\d\d$/.test(b.time) || !(b.duration >= 15 && b.duration <= 180) || !(b.capacity >= 1) || !(b.spots >= 1) || !(b.reference_price >= 100)) { return bad("badClass"); }
+    if (b.spots > b.capacity) { return bad("badCap"); }
+    if (val(f, "mode") === "weekly") {
+      b.days = []; var boxes = f.querySelectorAll('input[name="day"]:checked'); for (var i = 0; i < boxes.length; i++) { b.days.push(+boxes[i].value); }
+      if (!b.days.length) { return bad("badDays"); }
+      await api("POST", "/studio/series", b); return { ok: true, text: t("addedRec") };
+    }
+    b.date = val(f, "date"); if (!b.date) { return bad("badClass"); }
+    await api("POST", "/studio/sessions", b); return { ok: true, text: t("added") };
+  } },
+  "adm-cash": { key: "adm-cash", run: async function (f) { var e = val(f, "email").toLowerCase(); if (!EMAIL_RE.test(e)) { return bad("badEmail"); } await api("POST", "/admin/payments/cash", { email: e, plan_id: num(f, "plan_id") }); D.members = null; return { ok: true, text: "Formule activée pour " + e + "." }; } },
+  "adm-studio": { key: "adm-studio", run: async function (f) {
+    var b = {}; ["name", "city", "area", "description", "manager_name", "manager_email", "manager_password"].forEach(function (k) { b[k] = val(f, k); });
+    if (b.name.length < 2 || b.city.length < 2 || !b.manager_name || !EMAIL_RE.test(b.manager_email) || b.manager_password.length < 8) { return { ok: false, text: "Vérifiez les champs : e-mail valide et mot de passe d'au moins 8 caractères." }; }
+    await api("POST", "/admin/studios", b); await loadPublic(); return { ok: true, text: "Studio créé. Transmettez l'e-mail et le mot de passe au gérant." };
+  } },
+  "adm-plan": { key: "adm-plan", run: async function (f) {
+    var b = {}; ["name_fr", "name_en", "name_ar", "desc_fr", "desc_en", "desc_ar"].forEach(function (k) { b[k] = val(f, k); });
+    b.credits = num(f, "credits"); b.price_dzd = num(f, "price_dzd"); b.is_active = val(f, "is_active") === "1"; b.sort = num(f, "sort") || 0;
+    if (!b.name_fr || !b.name_en || !b.name_ar || !(b.credits >= 1) || !(b.price_dzd >= 100)) { return { ok: false, text: "Vérifiez les noms, les crédits et le prix." }; }
+    await api("PUT", "/admin/plans/" + f.getAttribute("data-id"), b); await loadPublic(); return { ok: true, text: "Formule enregistrée." };
+  } },
+  "adm-credits": { key: "adm-credits", run: async function (f) { var c = num(f, "credits"); if (!(c >= 1)) { return { ok: false, text: "Nombre de crédits invalide." }; } await api("PATCH", "/admin/series/" + f.getAttribute("data-id"), { credits: c }); await loadSessions(); return { ok: true, text: "Prix en crédits mis à jour pour les séances à venir." }; } },
+  "adm-adjust": { key: "adm-adjust", run: async function (f) { var d = num(f, "delta"), r = val(f, "reason"); if (!d || r.length < 3) { return { ok: false, text: "Indiquez un nombre de crédits et un motif." }; } await api("POST", "/admin/members/" + f.getAttribute("data-id") + "/credits", { delta: d, reason: r }); D.members = await api("GET", "/admin/members"); return { ok: true, text: "Crédits ajustés." }; } },
+  "adm-search": { key: "adm-adjust", run: async function (f) { D.members = await api("GET", "/admin/members?q=" + encodeURIComponent(val(f, "q"))); } },
+  "adm-statements": { key: "adm-statements", run: async function (f) { D.statements = await api("GET", "/admin/statements?month=" + encodeURIComponent(val(f, "month"))); } }
+};
+
+document.addEventListener("click", function (ev) {
+  var el = ev.target.closest ? ev.target.closest("[data-act]") : null;
+  if (!el) { return; }
+  var fn = ACT[el.getAttribute("data-act")];
+  if (fn) { ev.preventDefault(); fn(el.getAttribute("data-id"), el); }
+});
+document.addEventListener("submit", async function (ev) {
+  var f = ev.target, name = f.getAttribute("data-form");
+  if (!name) { return; }
+  ev.preventDefault();
+  if (busy) { return; }
+  if (name === "slot") {
+    busy = true;
+    try { await api("PATCH", "/studio/sessions/" + f.getAttribute("data-id"), { spots: num(f, "spots") }); closeDlg(); toast(t("saved")); await show(false); }
+    catch (e) { document.getElementById("slotErr").textContent = errText(e); }
+    finally { busy = false; }
+    return;
+  }
+  var def = FORMS[name]; if (!def) { return; }
+  formMsg = {}; busy = true;
+  var res = null;
+  try { res = await def.run(f); } catch (e) { res = { ok: false, text: errText(e) }; }
+  busy = false;
+  if (res) { formMsg[def.key] = res; }
+  await show(false);
+  if (res && !res.ok) { var again = document.querySelector('[data-form="' + name + '"]'); var first = again && again.querySelector("input, textarea"); if (first) { first.focus(); } }
+});
+document.addEventListener("change", function (ev) {
+  var el = ev.target;
+  if (el.hasAttribute("data-filter")) { F[el.getAttribute("data-filter")] = el.value; render(false); var again = document.getElementById(el.id); if (again) { again.focus(); } }
+  else if (el.id === "c-mode") { var w = el.value === "weekly"; document.getElementById("c-days-box").hidden = !w; document.getElementById("c-date-box").hidden = w; }
+});
+dlg.addEventListener("click", function (ev) { if (ev.target === dlg) { closeDlg(); } });
+window.addEventListener("hashchange", function () { formMsg = {}; closeDlg(); show(true); });
+
+(async function start() {
+  render(false);
+  var paid = null;
+  try { paid = new URLSearchParams(location.search).get("paiement"); if (paid) { history.replaceState(null, "", location.pathname + location.hash); } } catch (e) {}
+  try { await Promise.all([loadPublic(), loadMe()]); } catch (e) { toast(errText(e)); }
+  D.ready = true;
+  await show(false);
+  if (paid === "ok") { toast(t("payOk")); } else if (paid === "echec") { toast(t("payKo")); }
+})();
+})();
+</script>
+</body>
+</html>
