@@ -117,6 +117,8 @@ html[lang="ar"] h1{line-height:1.25}
 .field input,.field select,.field textarea{min-height:48px;padding:10px 14px;border-radius:14px;border:1px solid #C9D0D6;background:#fff;font:inherit;font-size:16px;color:var(--ink);width:100%}
 .field input:focus,.field select:focus,.field textarea:focus{outline:3px solid var(--accent-soft);border-color:var(--accent)}
 .field textarea{min-height:120px;resize:vertical}
+/* Dans un formulaire en colonne, la base de 180px deviendrait une hauteur : on la neutralise. */
+form.stack .field,.dform .field{flex:0 0 auto}
 form.stack{display:flex;flex-direction:column;gap:14px;max-width:560px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
 form.cols{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
 .meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:15px;color:var(--muted)}
@@ -187,6 +189,11 @@ form.inline input{min-height:44px;padding:6px 10px;border-radius:12px;border:1px
 .tabbar{display:none}
 @media (max-width:760px){
   nav.main a.link{display:none}
+  header.top{position:static}
+  header.top .wrap{padding-block:8px}
+  .brand{font-size:22px}
+  nav.main .btn.small{min-height:44px;padding:6px 12px;font-size:14px}
+  form.stack{padding:18px}
   .week{grid-template-columns:1fr}
   .page{padding-block:24px 48px}.sec{padding-block:40px}
   .art{height:360px;transform:scale(.9);transform-origin:top center;margin-bottom:-30px}
